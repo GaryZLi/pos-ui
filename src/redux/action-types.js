@@ -1,0 +1,1 @@
+export const UPDATE_SCREEN_TYPE = 'UPDATE_SCREEN_TYPE';
