@@ -1,8 +1,23 @@
 import * as types from './action-types';
 
+/*
+=====================
+|    SCREENTYPES    |
+=====================
+- main
+- takeOut
+- order
+
+===================
+|    LANGUAGES    |
+===================
+- English
+- Chinese
+*/
+
 const initialState = {
-    screenType: 'order',
-    language: 'english',
+    screenType: 'main',
+    language: 'English',
     orders: [
 
     ],
