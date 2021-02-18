@@ -5,12 +5,13 @@ import View from './containers/View';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import store from './redux/store';
+import './config/websocket';
 
 ReactDOM.render(
-  <Provider store={store}>
-    <View />
-  </Provider>,
-  document.getElementById('root')
+    <Provider store={store}>
+        <View />
+    </Provider>,
+    document.getElementById('root')
 );
 
 // If you want to start measuring performance in your View, pass a function

@@ -22,7 +22,7 @@ const List = () => {
 
     return (
         <div className={classes.rootContainer}>
-            {a}
+            {/* {a} */}
         </div>
     );
 };

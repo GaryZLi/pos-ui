@@ -5,8 +5,8 @@ import * as types from './action-types';
 |    SCREENTYPES    |
 =====================
 - main
-- takeOut
 - order
+- list
 
 ===================
 |    LANGUAGES    |
@@ -16,14 +16,10 @@ import * as types from './action-types';
 */
 
 const initialState = {
-    screenType: 'main',
+    screenType: 'order',
     language: 'English',
-    orders: [
-
-    ],
-    tables: {
-        
-    },
+    orders: [],
+    tables: {},
 };
 
 const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
@@ -32,6 +28,17 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
             return {
                 ...state,
                 screenType: action.screenType,
+            };
+
+        case types.UPDATE_LANGUAGE:
+            const languages = {
+                '中文': 'English',
+                English: '中文',
+            };
+
+            return {
+                ...state,
+                language: languages[action.language],
             };
 
         default:

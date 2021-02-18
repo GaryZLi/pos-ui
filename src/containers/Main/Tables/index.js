@@ -10,19 +10,19 @@ const useStyles = makeStyles({
     },
 });
 
-const columns = [4, 3, 3];
+// FIX-
+// this should be in server, maybe settings.json
+const columnRows = [4, 2, 3];
 
 const Tables = () => {
     const classes = useStyles();
 
     return (
         <div className={classes.rootContainer}>
-            {columns.map((rows, col) => {
+            {columnRows.map((rows, col) => {
                 const t = [];
 
                 for (let row = 0; row < rows; row++) {
-
-                    console.log(col)
                     t.push(
                         <Table
                             key={`${row}${col}`}
