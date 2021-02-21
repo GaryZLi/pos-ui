@@ -1,3 +1,4 @@
 - maybe a button to text delivery info to phone -> addr, phone, order total
 - a reject button, 
 - reject modal too?
+- button to check karsh or not
