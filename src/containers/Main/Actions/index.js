@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import Setting from './Setting';
+import Setting from './Action';
 import {
     updateLanguage,
     updateScreenType,
@@ -21,7 +21,7 @@ const Settings = ({
     updateScreenType,
 }) => {
 
-    const settings = [
+    const mainActions = [
         {
             name: {
                 '中文': 'Order 中文',
@@ -54,7 +54,7 @@ const Settings = ({
 
     return (
         <div style={styles.rootContainer}>
-            {settings.map(setting => (
+            {mainActions.map(setting => (
                 <Setting
                     key={setting.name[language]}
                     name={setting.name[language]}

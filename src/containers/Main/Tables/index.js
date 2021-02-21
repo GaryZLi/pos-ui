@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/styles';
+import { connect } from 'react-redux';
 import Table from './Table';
 
 const useStyles = makeStyles({
@@ -12,18 +13,20 @@ const useStyles = makeStyles({
 
 // FIX-
 // this should be in server, maybe settings.json
-const columnRows = [4, 2, 3];
+// const columnRows = [4, 2, 3];
 
-const Tables = () => {
+const Tables = ({
+    tables,
+}) => {
     const classes = useStyles();
 
     return (
         <div className={classes.rootContainer}>
-            {columnRows.map((rows, col) => {
-                const t = [];
+            {tables.map((rows, col) => {
+                const arr = [];
 
                 for (let row = 0; row < rows; row++) {
-                    t.push(
+                    arr.push(
                         <Table
                             key={`${row}${col}`}
                             row={row + 1}
@@ -36,10 +39,17 @@ const Tables = () => {
                     );
                 }
 
-                return t;
+                return arr;
             })}
         </div>
     );
 };
 
-export default Tables;
+const states = ({
+    settings,
+}) => ({
+    tables: settings.tables,
+});
+
+
+export default connect(states)(Tables);

@@ -5,7 +5,9 @@ import View from './containers/View';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import store from './redux/store';
-import './config/websocket';
+import connectToServer from './config/websocket';
+
+connectToServer();
 
 ReactDOM.render(
     <Provider store={store}>

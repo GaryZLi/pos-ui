@@ -1,6 +1,7 @@
 import { makeStyles } from '@material-ui/styles';
 import List from './List';
 import Panel from './Panel';
+import UserInfo from './UserInfo';
 
 const useStyles = makeStyles({
     rootContainer: {
@@ -10,9 +11,12 @@ const useStyles = makeStyles({
         flexDirection: 'column',
     },
     orderContainer: {
+        height: `calc(100% - 100px)`,
         width: '100%',
         display: 'flex',
-        flex: 1,
+        flexDirection: 'row',
+        // alignItems: 'stretch',
+        // flex: 1,
     },
 })
 
@@ -23,6 +27,7 @@ const Order = () => {
         <div className={classes.rootContainer}>
             <Panel/>
             <div className={classes.orderContainer}>
+                <UserInfo/>
                 <List/>
             </div>
         </div>

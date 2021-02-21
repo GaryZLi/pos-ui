@@ -1,27 +1,29 @@
 import axios from 'axios';
+import {
+    parseMessage,
+} from '../actions';
+import {
+    updateMessage,
+    dispatchToStore,
+} from '../redux/actions';
 
-const connect = async () => {
+const connectToServer = async () => {
     await axios
         .post('https://' + process.env.REACT_APP_SERVER, {
-            x: 'process.env.REACT_APP_X',
+            x: process.env.REACT_APP_X,
             y: process.env.REACT_APP_Y,
         })
         .then()
         .catch(err => console.log(err));
 
 
-    const ws = new WebSocket(`wss://${process.env.REACT_APP_SERVER}`, 'LOL');
+    const ws = new WebSocket(`wss://${process.env.REACT_APP_SERVER}`);
+    
+    ws.onopen = () => dispatchToStore('ws', ws);
 
-    ws.onopen = function open() {
-        ws.send('hello from client');
-    };
-
-    ws.onmessage = function incoming(data) {
-        console.log(data.data);
-
-    };
+    ws.onmessage = ({ data }) => data.length && updateMessage(parseMessage(data));
 
     ws.addEventListener('error', (err) => console.log(err.message));
 };
 
-connect();
+export default connectToServer;

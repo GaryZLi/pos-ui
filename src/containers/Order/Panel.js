@@ -25,7 +25,7 @@ const Panel = ({
     updateScreenType,
 }) => {
 
-    const actionSettings = [
+    const panelList = [
         {
             iconSrc: exitIcon,
             name: {
@@ -61,6 +61,46 @@ const Panel = ({
         {
             iconSrc: deleteIcon,
             name: {
+                '中文': 'original 中文',
+                English: 'Original',
+            },
+            action: () => updateLanguage(language),
+        },
+        {
+            iconSrc: deleteIcon,
+            name: {
+                '中文': 'Delivery 中文',
+                English: 'Delivery',
+            },
+            action: () => updateLanguage(language),
+        },
+        {
+            iconSrc: deleteIcon,
+            name: {
+                '中文': 'Sort 中文',
+                English: 'Sort UP',
+            },
+            action: () => updateLanguage(language),
+        },
+        {
+            iconSrc: deleteIcon,
+            name: {
+                '中文': 'Sort 中文',
+                English: 'Sort Down',
+            },
+            action: () => updateLanguage(language),
+        },
+        {
+            iconSrc: deleteIcon,
+            name: {
+                '中文': 'Setting 中文',
+                English: 'Setting',
+            },
+            action: () => console.log('Setting'),
+        },
+        {
+            iconSrc: deleteIcon,
+            name: {
                 '中文': 'English',
                 English: '中文',
             },
@@ -80,8 +120,9 @@ const Panel = ({
     
     return (
         <div className={classes.rootContainer}>
-            {actionSettings.map(action => (
+            {panelList.map(action => (
                 <ActionButton
+                    key={action.name.English}
                     iconSrc={action.iconSrc}
                     name={action.name[language]}
                     action={action.action}

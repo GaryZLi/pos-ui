@@ -16,6 +16,9 @@ const List = () => {
     return (
         <div className={classes.rootContainer}>
 ds
+<div>
+                should have a check to unselect cash
+            </div>
         </div>
     );
 };
