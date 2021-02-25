@@ -1,7 +1,14 @@
+import { useEffect } from 'react';
+import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/styles';
-import List from './List';
+import ControlPanel from './ControlPanel';
 import Panel from './Panel';
-import UserInfo from './UserInfo';
+import CustomerInfo from './CustomerInfo';
+import OrderList from './OrderList';
+import MenuView from './MenuView';
+import {
+    updateOrderListInfo,
+} from '../../redux/actions';
 
 const useStyles = makeStyles({
     rootContainer: {
@@ -20,18 +27,36 @@ const useStyles = makeStyles({
     },
 })
 
-const Order = () => {
+const Order = ({
+    updateOrderListInfo,
+}) => {
     const classes = useStyles();
+
+    useEffect(() => {
+        updateOrderListInfo('date');
+
+        // eslint-disable-next-line
+    }, []);
 
     return (
         <div className={classes.rootContainer}>
             <Panel/>
             <div className={classes.orderContainer}>
-                <UserInfo/>
-                <List/>
+                <CustomerInfo/>
+                <OrderList/>
+                <ControlPanel/>
+                <MenuView/>
             </div>
         </div>
     );
 };
 
-export default Order;
+const states = ({
+}) => ({
+});
+
+const dispatches = {
+    updateOrderListInfo,
+};
+
+export default connect(states, dispatches)(Order);

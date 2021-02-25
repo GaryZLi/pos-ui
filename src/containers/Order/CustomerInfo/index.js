@@ -2,12 +2,13 @@ import { makeStyles } from '@material-ui/styles';
 import { connect } from 'react-redux';
 import PhoneSection from './PhoneSection';
 import AddressSection from './AddressSection';
+import InfoSection from './InfoSection';
 
 const useStyles = makeStyles({
     rootContainer: {
         height: '100%',
         maxHeight: '100%',
-        width: 300,
+        width: 220,
         marginRight: '1px solid black',
         display: 'flex',
         flexDirection: 'column',
@@ -48,10 +49,14 @@ const sections = {
     Address: {
         '中文': 'Address 中文',
         English: 'Address',
+    },
+    InfoSection: {
+        '中文': 'customer info 中文',
+        English: 'Customer Info',
     }
 };
 
-const UserInfo = ({
+const CustomerInfo = ({
     language,
 }) => {
     const classes = useStyles();
@@ -61,11 +66,15 @@ const UserInfo = ({
             <div className={classes.heading}>
                 {sections.Phone[language]}
             </div>
-            <PhoneSection/>
+            <PhoneSection />
             <div className={classes.heading}>
                 {sections.Address[language]}
             </div>
-            <AddressSection/>
+            <AddressSection />
+            <div className={classes.heading}>
+                {sections.InfoSection[language]}
+            </div>
+            <InfoSection />
         </div>
     );
 };
@@ -77,7 +86,6 @@ const states = ({
 });
 
 const dispatches = {
-
 };
 
-export default connect(states, dispatches)(UserInfo);
+export default connect(states, dispatches)(CustomerInfo);

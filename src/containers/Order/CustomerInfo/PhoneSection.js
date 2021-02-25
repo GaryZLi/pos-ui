@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/styles';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { connect } from 'react-redux';
 import {
     TextField,
@@ -8,7 +8,6 @@ import {
     ListItem,
     ListItemText,
 } from '@material-ui/core'
-import { updatePhoneNums } from '../../../redux/actions';
 
 const useStyles = makeStyles({
     rootContainer: {
@@ -50,16 +49,17 @@ const useStyles = makeStyles({
         zIndex: 10,
         width: '100%',
     },
-    nested: {
-        backgroundColor: 'red'
-    }
 });
+
+const placeholders = {
+    'English': 'Phone Number',
+    '中文': 'Phone Number 中文',
+};
 
 const PhoneSection = ({
     ws,
     language,
     phoneNums,
-    updatePhoneNums,
 }) => {
     const classes = useStyles();
     const [phones, setPhones] = useState(['']);
@@ -79,7 +79,14 @@ const PhoneSection = ({
             ];
         });
 
-        if (val.length) ws.send('phoneInput|' + val);
+        if (val.length === 10) {
+            const customerId = phoneNums.find(phone => phone.phoneNum === phones[id]).customerId;
+            ws.send('getCustomerInfo|' + customerId);
+            ws.send('getAddresses|' + customerId);
+        }
+        else if (val.length) {
+            ws.send('getPhone|' + val);
+        }
     };
 
     const formatPhoneNum = num => {
@@ -97,9 +104,6 @@ const PhoneSection = ({
         }
     };
 
-    //eslint-disable-next-line
-    useEffect(() => updatePhoneNums([]), []);
-
     return (
         <div className={classes.rootContainer}>
             {phones.map((phone, id) => (
@@ -109,7 +113,7 @@ const PhoneSection = ({
                 >
                     <TextField
                         autoComplete='chrome-off'
-                        placeholder='Phone Number'
+                        placeholder={`${placeholders[language]}`}
                         className={classes.textField}
                         value={formatPhoneNum(phone)}
                         onChange={e => handlePhoneInput(e.target.value, id)}
@@ -125,13 +129,12 @@ const PhoneSection = ({
                         <Paper component="div" >
                             {phoneNums.map(option => (
                                 <ListItem
-                                    className={classes.nested}
-                                    key={option.phonenum}
+                                    key={option.phoneNum}
                                     button
                                 >
                                     <ListItemText
-                                        primary={formatPhoneNum(option.phonenum)}
-                                        onClick={() => handlePhoneInput(option.phonenum, id)}
+                                        primary={formatPhoneNum(option.phoneNum)}
+                                        onClick={() => handlePhoneInput(option.phoneNum, id)}
                                     />
                                 </ListItem>
                             ))}
@@ -154,14 +157,15 @@ const PhoneSection = ({
 
 const states = ({
     phoneNums,
+    language,
     ws,
 }) => ({
     phoneNums,
+    language,
     ws,
 });
 
 const dispatches = {
-    updatePhoneNums,
 };
 
 export default connect(states, dispatches)(PhoneSection);

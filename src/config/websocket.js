@@ -8,8 +8,9 @@ import {
 } from '../redux/actions';
 
 const connectToServer = async () => {
+    console.log('http://' + process.env.REACT_APP_SERVER);
     await axios
-        .post('https://' + process.env.REACT_APP_SERVER, {
+        .post('http://' + process.env.REACT_APP_SERVER, {
             x: process.env.REACT_APP_X,
             y: process.env.REACT_APP_Y,
         })
@@ -17,7 +18,7 @@ const connectToServer = async () => {
         .catch(err => console.log(err));
 
 
-    const ws = new WebSocket(`wss://${process.env.REACT_APP_SERVER}`);
+    const ws = new WebSocket(`ws://${process.env.REACT_APP_SERVER}`);
     
     ws.onopen = () => dispatchToStore('ws', ws);
 

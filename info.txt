@@ -2,3 +2,18 @@
 - a reject button, 
 - reject modal too?
 - button to check karsh or not
+- add customer name section
+- panel for pay later
+- add a filter  for menu
+- on exist, preserve state until delete all
+- split bill
+- under charge, in case someone card declines, or switch payment etc
+- select certain items button -> maybe focusedItems to focusedItemss = {}
+
+
+-----
+1) when open takeout, it should be togo
+2) if open a table, the type should be dinein
+3) delivery all will change the type to delivery
+4) on kitchen All, delivery all
+5) payall should have a modal popup, 

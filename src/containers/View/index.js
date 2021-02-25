@@ -13,8 +13,8 @@ const styles = {
 };
 
 const screen = {
-    'main': <Main/>,
-    'order': <Order/>
+    'main': <Main />,
+    'order': <Order />
 };
 
 const View = ({

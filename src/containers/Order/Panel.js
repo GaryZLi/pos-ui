@@ -1,11 +1,21 @@
 import { makeStyles } from '@material-ui/styles';
 import { connect } from 'react-redux';
 import ActionButton from './ActionButton';
-import wokIcon from '../../picSrc/wok.png';
-import wokAllIcon from '../../picSrc/wokAll.png';
-import exitIcon from '../../picSrc/exit.png';
-import deleteIcon from '../../picSrc/delete.png';
+import kitchenIcon from '../../picSrc/kitchen.svg';
+import kitchenAllIcon from '../../picSrc/wok.svg';
+import billIcon from '../../picSrc/bill.svg';
+import billAllIcon from '../../picSrc/billAll.svg';
+import deleteIcon from '../../picSrc/delete.svg';
+import deleteAllIcon from '../../picSrc/deleteAll.svg';
+import payIcon from '../../picSrc/pay.svg';
+import payAllIcon from '../../picSrc/payAll.svg';
+import deliveryIcon from '../../picSrc/delivery.svg';
+import deliveryAllIcon from '../../picSrc/deliveryAll.svg';
+import settingIcon from '../../picSrc/setting.svg';
+import languageIcon from '../../picSrc/language.svg';
+import exitIcon from '../../picSrc/exit.svg';
 import {
+    updateItems,
     updateLanguage,
     updateScreenType,
 } from '../../redux/actions';
@@ -15,6 +25,7 @@ const useStyles = makeStyles({
         height: 100,
         width: '100%',
         display: 'flex',
+        backgroundColor: '#6de38d',
     },
 });
 
@@ -23,11 +34,12 @@ const Panel = ({
     language,
     updateLanguage,
     updateScreenType,
+    updateItems,
 }) => {
 
     const panelList = [
         {
-            iconSrc: exitIcon,
+            iconSrc: billIcon,
             name: {
                 '中文': 'Bill 中文',
                 English: 'Bill'
@@ -35,20 +47,60 @@ const Panel = ({
             action: () => console.log('fire'),
         },
         {
-            iconSrc: wokIcon,
+            iconSrc: billAllIcon,
             name: {
-                '中文': 'Fire 中文',
-                English: 'fire',
+                '中文': 'Bill All 中文',
+                English: 'Bill All'
             },
             action: () => console.log('fire'),
         },
         {
-            iconSrc: wokAllIcon,
+            iconSrc: kitchenIcon,
             name: {
-                '中文': 'fire all 中文',
-                English: 'fire all',
+                '中文': 'Kitchen 中文',
+                English: 'Kitchen',
             },
-            action: () => console.log('fire all'),
+            action: () => updateItems('kitchen'),
+        },
+        {
+            iconSrc: kitchenAllIcon,
+            name: {
+                '中文': 'Kitchen All 中文',
+                English: 'Kitchen All',
+            },
+            action: () => updateItems('kitchenAll'),
+        },
+        {
+            iconSrc: payIcon,
+            name: {
+                '中文': 'Pay 中文',
+                English: 'Pay',
+            },
+            action: () => updateLanguage(language),
+        },
+        {
+            iconSrc: payAllIcon,
+            name: {
+                '中文': 'Pay All 中文',
+                English: 'Pay All',
+            },
+            action: () => updateLanguage(language),
+        },
+        {
+            iconSrc: deliveryIcon,
+            name: {
+                '中文': 'Delivery 中文',
+                English: 'Delivery',
+            },
+            action: () => updateLanguage(language),
+        },
+        {
+            iconSrc: deliveryAllIcon,
+            name: {
+                '中文': 'Delivery All 中文',
+                English: 'Delivery All',
+            },
+            action: () => updateLanguage(language),
         },
         {
             iconSrc: deleteIcon,
@@ -59,39 +111,15 @@ const Panel = ({
             action: () => console.log('delete'),
         },
         {
-            iconSrc: deleteIcon,
+            iconSrc: deleteAllIcon,
             name: {
-                '中文': 'original 中文',
-                English: 'Original',
+                '中文': 'Delete All 中文',
+                English: 'Delete All',
             },
-            action: () => updateLanguage(language),
+            action: () => console.log('Delete All'),
         },
         {
-            iconSrc: deleteIcon,
-            name: {
-                '中文': 'Delivery 中文',
-                English: 'Delivery',
-            },
-            action: () => updateLanguage(language),
-        },
-        {
-            iconSrc: deleteIcon,
-            name: {
-                '中文': 'Sort 中文',
-                English: 'Sort UP',
-            },
-            action: () => updateLanguage(language),
-        },
-        {
-            iconSrc: deleteIcon,
-            name: {
-                '中文': 'Sort 中文',
-                English: 'Sort Down',
-            },
-            action: () => updateLanguage(language),
-        },
-        {
-            iconSrc: deleteIcon,
+            iconSrc: settingIcon,
             name: {
                 '中文': 'Setting 中文',
                 English: 'Setting',
@@ -99,7 +127,7 @@ const Panel = ({
             action: () => console.log('Setting'),
         },
         {
-            iconSrc: deleteIcon,
+            iconSrc: languageIcon,
             name: {
                 '中文': 'English',
                 English: '中文',
@@ -141,6 +169,7 @@ const states = ({
 const dispatches = {
     updateLanguage,
     updateScreenType,
+    updateItems,
 };
 
 export default connect(states, dispatches)(Panel);
