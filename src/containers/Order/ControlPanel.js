@@ -93,7 +93,7 @@ const ControlPanel = ({
             },
             {
                 name: 'Change',
-                action: () => updateFocusedSection('change'),
+                action: () => updateFocusedSection('Change'),
             },
             {
                 name: 'Future',

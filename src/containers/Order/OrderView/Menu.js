@@ -40,7 +40,7 @@ const useStyles = makeStyles({
     }
 });
 
-const MenuView = ({
+const Menu = ({
     menu,
     language,
     focusedSection,
@@ -102,4 +102,4 @@ const dispatches = {
     updateItems,
 };
 
-export default connect(states, dispatches)(MenuView);
+export default connect(states, dispatches)(Menu);

@@ -31,6 +31,7 @@ const initialState = {
     addressOptions: [],
     orders: [], // maybe dont need becuz we can keep track of everything in the dinein, togo, delivery objects
     menu: [],
+    modifications: [],
     totalNum: 0, 
     /*
         currentNum = totalNum - orderNum;
@@ -117,6 +118,14 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                 ...state,
                 menu: [
                     ...action.menu,
+                ],
+            };
+
+        case types.UPDATE_MODIFICATIONS:
+            return {
+                ...state,
+                modifications: [
+                    ...action.modifications
                 ],
             };
 

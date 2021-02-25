@@ -5,7 +5,7 @@ import ControlPanel from './ControlPanel';
 import Panel from './Panel';
 import CustomerInfo from './CustomerInfo';
 import OrderList from './OrderList';
-import MenuView from './MenuView';
+import OrderView from './OrderView';
 import {
     updateOrderListInfo,
 } from '../../redux/actions';
@@ -45,7 +45,7 @@ const Order = ({
                 <CustomerInfo/>
                 <OrderList/>
                 <ControlPanel/>
-                <MenuView/>
+                <OrderView/>
             </div>
         </div>
     );

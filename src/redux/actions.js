@@ -25,6 +25,12 @@ export const updateMessage = message => {
             val = JSON.parse(message.data);
             break;
 
+        case 'modificationsResults':
+            type = types.UPDATE_MODIFICATIONS;
+            key = 'modifications';
+            val = JSON.parse(message.data);
+            break;
+
         case 'customerInfoResults':
             type = types.UPDATE_CUSTOMER_INFO;
             key = 'customerInfo';
