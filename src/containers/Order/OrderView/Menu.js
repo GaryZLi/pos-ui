@@ -6,17 +6,15 @@ import { updateItems } from '../../../redux/actions';
 const useStyles = makeStyles({
     rootContainer: {
         overflow: 'auto',
-        // backgroundColor: 'yellow',
-        flex: 1,        
-        display: 'flex',
-        alignItems: 'center',
-        flexDirection: 'column',
+        // flex: 1,        
+        // display: 'flex',
+        // alignItems: 'center',
+        // flexDirection: 'column',
     },
     sectionContainer: {
-        // flex: 1,
         display: 'flex',
         flexWrap: 'wrap',
-        // alignContent: 'flex-start',
+        alignContent: 'flex-start',
     },
     itemContainer: {
         height: 120,
@@ -53,7 +51,7 @@ const Menu = ({
         const temp = [
             ...menu
         ]
-        .filter(item => item.sectionName === focusedSection)
+        .filter(item => item.sectionName === focusedSection.English)
         .sort((a, b) => {
             if (a.itemName < b.itemName) return -1;
 

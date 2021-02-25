@@ -133,9 +133,9 @@ export const updateOrderListInfo = (key, val) => ({
     val,
 });
 
-export const updateItemModification = item => ({
-    type: types.UPDATE_ITEM_MODIFICATION,
-    item,
-});
+// export const updateItemModification = item => ({
+//     type: types.UPDATE_ITEM_MODIFICATION,
+//     item,
+// });
 
 

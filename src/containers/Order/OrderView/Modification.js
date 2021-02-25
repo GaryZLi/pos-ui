@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/styles';
 import { connect } from 'react-redux';
-import { updateItemModification } from '../../../redux/actions';
+import { updateItems } from '../../../redux/actions';
 
 const useStyles = makeStyles({
     rootContainer: {
@@ -39,7 +39,7 @@ const useStyles = makeStyles({
 const Modification = ({
     modifications,
     language,
-    updateItemModification,
+    updateItems,
 }) => {
     const classes = useStyles();
 
@@ -49,8 +49,9 @@ const Modification = ({
                 {modifications.map(mod => (
                     <div
                         className={classes.itemContainer}
-                        key={mod[`itemName${(language === 'English') ? '' : 'Chinese'}`]}
-                        onMouseDown={() => updateItemModification(mod.itemName)}
+                        key={mod.itemName}
+                        // key={mod[`itemName${(language === 'English') ? '' : 'Chinese'}`]}
+                        onMouseDown={() => updateItems('options', mod.itemName)}
                     >
                         <div>
                             {language === 'English'? mod.itemName : mod.itemNameChinese}
@@ -74,7 +75,7 @@ const states = ({
 });
 
 const dispatches = {
-    updateItemModification,
+    updateItems,
 };
 
 export default connect(states, dispatches)(Modification);

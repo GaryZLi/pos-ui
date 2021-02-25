@@ -55,6 +55,8 @@ const OrderList = ({
     orderList,
     language,
     focusedItems,
+    modNames,
+    modifications,
     updateFocusedItems,
     updateItems,
 }) => {
@@ -63,9 +65,20 @@ const OrderList = ({
     const orders = Object
         .keys(orderList.items)
         .filter(order => !orderList.items[order].deleted);
+    const optionNames = {
+        English: {},
+        '中文': {},
+    };
 
     for (const item of orders) {
         subTotal += orderList.items[item].cost * orderList.items[item].quantity;
+    }
+
+    for (const mod of modifications) {
+        optionNames[mod.itemName] = {
+            English: mod.itemName,
+            '中文': mod.itemNameChinese,
+        };
     }
 
     const tax = subTotal * 0.098;
@@ -73,7 +86,7 @@ const OrderList = ({
     return (
         <div className={classes.rootContainer}>
             <div className={classes.itemListContainer}>
-                {orders.map((order, id) => (
+                {orders.map(order => (
                     <div
                         className={classes.itemContainer}
                         key={order}
@@ -91,10 +104,10 @@ const OrderList = ({
                                     className={classes.itemInfo}
                                     key={option}
                                 >
-                                    {option}
+                                    {modNames[option][language]}
                                     {Object.keys(orderList.items[order].options[option]).map(optionName => (
                                         <div key={optionName}>
-                                            - {optionName}
+                                            - {optionNames[optionName][language]}
                                         </div>
                                     ))}
                                 </div>
@@ -159,10 +172,14 @@ const states = ({
     orderList,
     language,
     focusedItems,
+    modNames,
+    modifications,
 }) => ({
     orderList,
     language,
     focusedItems,
+    modNames,
+    modifications,
 });
 
 const dispatches = {

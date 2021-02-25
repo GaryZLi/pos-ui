@@ -68,9 +68,10 @@ const ControlPanel = ({
 }) => {
     const classes = useStyles();
     const [sections, setSections] = useState([]);
-    const [operation, setOperation] = useState();
-    const numOfFocusedItems = Object.keys(focusedItems).filter(item => focusedItems[item]);
+    const numOfFocusedItems = Object.keys(focusedItems).filter(item => focusedItems[item] && item !== 'all');
   
+    console.log(numOfFocusedItems.length)
+
     // TODO: maybe create a db for the sections, with name in english and chinese
     useEffect(() => {
         const set = {};
@@ -107,9 +108,12 @@ const ControlPanel = ({
                         className={classes.sectionItem}
                         key={section.English}
                         style={{
-                            backgroundColor: focusedSection === section.English? 'skyblue' : 'white',
+                            backgroundColor: focusedSection.English === section.English? 'skyblue' : 'white',
                         }}
-                        onMouseDown={() => updateFocusedSection(section.English)}
+                        onMouseDown={() => updateFocusedSection({
+                            English: section.English,
+                            '中文': section['中文'],
+                        })}
                     >
                         <div 
                             className={classes.sectionName}
@@ -133,23 +137,25 @@ const ControlPanel = ({
                 >
                     {language === 'English'? 'All' : 'All 中文'}
                 </button>
-                {Object.keys(modNames[language]).map(mod => (
+                {Object.keys(modNames).map(mod => (
                     <button
-                        disabled={!numOfFocusedItems.length}
+                        disabled={mod === 'Edit'? numOfFocusedItems.length !== 1 : !numOfFocusedItems.length}
                         className={classes.sectionItem}
                         key={mod}
                         style={{
-                            backgroundColor: focusedSection === mod.replaceAll(/[^A-Za-z+\s]/g, '').trim()? 'skyblue' : 'white',
+                            backgroundColor: focusedSection.English === mod? 'skyblue' : 'white',
                         }}
-                        onMouseDown={() => updateFocusedSection(mod.replaceAll(/[^A-Za-z+\s]/g, '').trim())}
+                        onMouseDown={() => updateFocusedSection({
+                            English: modNames[mod].English,
+                            '中文': modNames[mod]['中文'], 
+                        })}
                     >
-                        {mod}
+                        {modNames[mod][language]}
                     </button>
                 ))}
             </div>
             <div className={classes.divider} />
-            <div className={classes.sectionContainer}>
-                    {/* PLUS */}
+            {/* <div className={classes.sectionContainer}>
                     <button
                         className={classes.sectionItem}
                         style={{
@@ -172,7 +178,6 @@ const ControlPanel = ({
                             position: 'absolute'
                         }}/>
                     </button>
-                    {/* MULTIPLY */}
                     <button
                         className={classes.sectionItem}
                         style={{
@@ -199,7 +204,6 @@ const ControlPanel = ({
                             borderRadius: 30,
                         }}/>
                     </button>
-                    {/* SUBTRACT */}
                     <button
                         className={classes.sectionItem}
                         style={{
@@ -214,7 +218,8 @@ const ControlPanel = ({
                             backgroundColor: numOfFocusedItems.length !== 1? '#1010104d' : 'black',
                         }}/>
                     </button>
-            </div>
+            </div> */}
+
             {/* <div className={classes.sectionContainer}>
                 {operations.map(op => (
                     <button

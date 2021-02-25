@@ -18,7 +18,10 @@ import * as types from './action-types';
 const initialState = {
     screenType: 'order',
     language: 'English',
-    focusedSection: 'Appetizers', // TODO: maybe make this an object, so she can select multiple
+    focusedSection: {
+        English: 'Appetizers',
+        '中文': 'Appetizers 中文',
+    }, // TODO: maybe make this an object, so she can select multiple
     focusedItems: {
         all: false,
     },
@@ -32,7 +35,7 @@ const initialState = {
     orders: [], // maybe dont need becuz we can keep track of everything in the dinein, togo, delivery objects
     menu: [],
     modifications: [],
-    totalNum: 0, 
+    totalNum: 0,
     /*
         currentNum = totalNum - orderNum;
 
@@ -44,7 +47,7 @@ const initialState = {
         deleted: false,
         paid: false, // all paid
         type: '',
-        // delivery: false, /* prob dont need becuz we'll use the other object */
+        // delivery: false, /* prob dont need becuz we'll use the other object */ i dont even know LMAO
         // takeOut: false,
         // table: null,
         orderNum: null,
@@ -65,33 +68,61 @@ const initialState = {
             togo: bool,
             deleted: bool,
             biang: bool,
+            future: date,
         }
         */
     },
     modNames: {
-        English: {
-            'Add': 'Add',
-            'Less': 'Less',
-            'No': 'No',        
-            'Modify Price': 'Modify Price',
-            'Modify Quantity': 'Modify Quantity',
-            'Change': 'Change',
-            'Future': 'Future',
+        'Add': {
+            English: 'Add',
+            '中文': 'Add 中文',
         },
-        '中文': {
-            'Add 中文': 'Add 中文',
-            'Less 中文': 'Less 中文',
-            'No 中文': 'No 中文',        
-            'Modify Price 中文': 'Modify Price 中文',
-            'Modify Quantity 中文': 'Modify Quantity 中文',
-            'Change 中文': 'Change 中文',
-            'Future 中文': 'Future 中文',
+        'Less': {
+            English: 'Less',
+            '中文': 'Less 中文',
         },
+        'No': {
+            English: 'No',
+            '中文': 'No 中文',
+        },
+        'Edit': {
+            English: 'Edit',
+            '中文': 'Edit 中文',
+        },
+        'Future': {
+            English: 'Future',
+            '中文': 'Future 中文',
+        },
+        'Change': {
+            English: 'Change',
+            '中文': 'Change 中文',
+        },
+
+        // English: {
+        //     'Add': 'Add',
+        //     'Less': 'Less',
+        //     'No': 'No',        
+        //     'Edit': 'Edit',
+        //     'Future': 'Future',
+        //     'Change': 'Change',
+        //     // 'Modify Price': 'Modify Price',
+        //     // 'Modify Quantity': 'Modify Quantity',
+        // },
+        // '中文': {
+        //     'Add 中文': 'Add 中文',
+        //     'Less 中文': 'Less 中文',
+        //     'No 中文': 'No 中文',        
+        //     // 'Modify Price': 'Modify Price 中文',
+        //     'Edit 中文': 'Edit 中文',
+        //     // 'Modify Quantity': 'Modify Quantity 中文',
+        //     'Future 中文': 'Future 中文',
+        //     'Change 中文': 'Change 中文',
+        // },
     },
 };
 
 const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
-    switch(action.type) {
+    switch (action.type) {
         case types.DISPATCH_TO_STORE:
             return {
                 ...state,
@@ -168,7 +199,7 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
             };
 
         case types.UPDATE_FOCUSED_ITEMS:
-            
+
             if (action.item === 'all') {
                 // on, so turn off
                 if (state.focusedItems['all']) {
@@ -203,23 +234,43 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
         case types.UPDATE_FOCUSED_SECTION:
             return {
                 ...state,
-                focusedSection: action.section,
+                focusedSection: {
+                    ...action.section,
+                },
             };
 
         case types.UPDATE_ITEMS:
             // TODO deal with all selected
 
-            switch(action.key) {
+            switch (action.key) {
                 case 'options':
+                    for (const item in state.focusedItems) {
+                        if (!state.focusedItems[item] || item === 'all') continue;
+        
+                        if (state.orderList.items[item].options[state.focusedSection.English]) {
+                            if (state.orderList.items[item].options[state.focusedSection.English][action.val]) {
+                                delete state.orderList.items[item].options[state.focusedSection.English][action.val];
+        
+                                if (!Object.keys(state.orderList.items[item].options[state.focusedSection.English]).length) {
+                                    delete state.orderList.items[item].options[state.focusedSection.English];
+                                }
+                            }
+                            else {
+                                state.orderList.items[item].options[state.focusedSection.English][action.val] = true;
+                            }
+                        }
+                        else {
+                            state.orderList.items[item].options[state.focusedSection.English] = {
+                                [action.val]: true,
+                            };
+                        }
+                    }
+
                     return {
                         ...state,
-                        // orderList: {
-                        //     ...state.orderList,
-                        //     options: {
-                        //         ...state.orderList.options,
-                        //         [state.focusedItems]: action.action + ' -> ' + action.val,
-                        //     }
-                        // }
+                        orderList: {
+                            ...state.orderList,
+                        }
                     };
 
                 case 'kitchen':
@@ -239,7 +290,7 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                         }
                     };
 
-                case 'kitchenAll': 
+                case 'kitchenAll':
                     for (const item in state.orderList.items) {
                         state.orderList.items[item].kitchened = true;
                     }
@@ -272,7 +323,7 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                         ...state,
                         focusedItems: {
                             ...state.focusedItems,
-                            [action.val.itemName]: state.focusedItems.all? true : false,
+                            [action.val.itemName]: state.focusedItems.all ? true : false,
                         },
                         orderList: {
                             ...state.orderList,
@@ -341,7 +392,7 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
             }
 
         case types.UPDATE_ORDERLIST_INFO:
-            switch(action.key) {
+            switch (action.key) {
                 case 'date':
                     return {
                         ...state,
@@ -355,35 +406,35 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                     return state;
             }
 
-        case types.UPDATE_ITEM_MODIFICATION:
-            for (const item in state.focusedItems) {
-                if (!state.focusedItems[item] || item === 'all') continue;
+        // case types.UPDATE_ITEM_MODIFICATION:
+            // for (const item in state.focusedItems) {
+            //     if (!state.focusedItems[item] || item === 'all') continue;
 
-                if (state.orderList.items[item].options[state.focusedSection]) {
-                    if (state.orderList.items[item].options[state.focusedSection][action.item]) {
-                        delete state.orderList.items[item].options[state.focusedSection][action.item];
+            //     if (state.orderList.items[item].options[state.focusedSection.English]) {
+            //         if (state.orderList.items[item].options[state.focusedSection.English][action.item]) {
+            //             delete state.orderList.items[item].options[state.focusedSection.English][action.item];
 
-                        if (!Object.keys(state.orderList.items[item].options[state.focusedSection]).length) {
-                            delete state.orderList.items[item].options[state.focusedSection];
-                        }
-                    }
-                    else {
-                        state.orderList.items[item].options[state.focusedSection][action.item] = true;
-                    }
-                }
-                else {
-                    state.orderList.items[item].options[state.focusedSection] = {
-                        [action.item]: true,
-                    };
-                }
-            }
+            //             if (!Object.keys(state.orderList.items[item].options[state.focusedSection.English]).length) {
+            //                 delete state.orderList.items[item].options[state.focusedSection.English];
+            //             }
+            //         }
+            //         else {
+            //             state.orderList.items[item].options[state.focusedSection.English][action.item] = true;
+            //         }
+            //     }
+            //     else {
+            //         state.orderList.items[item].options[state.focusedSection.English] = {
+            //             [action.item]: true,
+            //         };
+            //     }
+            // }
 
-            return {
-                ...state,
-                orderList: {
-                    ...state.orderList,
-                }
-            };
+            // return {
+            //     ...state,
+            //     orderList: {
+            //         ...state.orderList,
+            //     }
+            // };
 
         default:
             return state;

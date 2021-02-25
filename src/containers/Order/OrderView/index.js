@@ -2,6 +2,8 @@ import { makeStyles } from '@material-ui/styles';
 import { connect } from 'react-redux';
 import Menu from './Menu';
 import Modification from './Modification';
+import Edit from './Edit';
+import Future from './Future';
 
 const useStyles = makeStyles({
     rootContainer: {
@@ -13,35 +15,36 @@ const useStyles = makeStyles({
     },
 });
 
+const focuses = {
+    'Healthy Veggies': 'menu',
+    'Poultry & Meat Dishes': 'menu',
+    'Every Kind Of Steaks': 'menu',
+    'Drinks': 'menu',
+    'Clay Pot/ Wor/ Sizzling': 'menu',
+    'Steamed': 'menu',
+    'Regional Chinese & Seafood': 'menu',
+    'Appetizers': 'menu',
+    'Rice In Clay Pot': 'menu',
+    'Cantonese Style Tasted': 'menu',
+    'Fried Rice/Noodle/Chow Fun': 'menu',
+    'B.B.Q Specialty': 'menu',
+    'Soup Specialty': 'menu',
+    'Add': "mod",
+    'Less': "mod",
+    'Change': "mod",
+    'No': "mod",
+    // 'Modify Price': 'mp',
+    'Edit': 'edit',
+    'Future': 'future',
+};
+
 const OrderView = ({
     focusedSection,
 }) => {
     const classes = useStyles();
-    const focuses = {
-        'Healthy Veggies': 'menu',
-        'Poultry & Meat Dishes': 'menu',
-        'Every Kind Of Steaks': 'menu',
-        'Drinks': 'menu',
-        'Clay Pot/ Wor/ Sizzling': 'menu',
-        'Steamed': 'menu',
-        'Regional Chinese & Seafood': 'menu',
-        'Appetizers': 'menu',
-        'Rice In Clay Pot': 'menu',
-        'Cantonese Style Tasted': 'menu',
-        'Fried Rice/Noodle/Chow Fun': 'menu',
-        'B.B.Q Specialty': 'menu',
-        'Soup Specialty': 'menu',
-        'Add': "mod",
-        'Less': "mod",
-        'Change': "mod",
-        'No': "mod",
-        'Modify Price': 'mp',
-        'Modify Quantity': 'mq',
-        'Future': 'future',
-    };
     let currentView;
 
-    switch(focuses[focusedSection]) {
+    switch(focuses[focusedSection.English]) {
         case 'menu':
             currentView = <Menu/>;
             break;
@@ -50,12 +53,13 @@ const OrderView = ({
             currentView = <Modification/>;
             break;
 
-        case 'mp':
-            currentView = 'mp';
+        case 'future':
+            currentView = <Future/>;
             break;
 
-        case 'mq':
-            currentView = 'mq';
+        case 'edit':
+        // case 'mq':
+            currentView = <Edit/>;
             break;
 
         default:
