@@ -86,8 +86,24 @@ const OrderList = ({
                             {orderList.items[order].name[language]}
                         </div>
                         <div className={classes.itemInfo}>
+                            {Object.keys(orderList.items[order].options).map(option => (
+                                <div
+                                    className={classes.itemInfo}
+                                    key={option}
+                                >
+                                    {option}
+                                    {Object.keys(orderList.items[order].options[option]).map(optionName => (
+                                        <div key={optionName}>
+                                            - {optionName}
+                                        </div>
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
+                        <div className={classes.itemInfo}>
                             x{orderList.items[order].quantity} {'->'} ${(orderList.items[order].cost * orderList.items[order].quantity).toFixed(2).toLocaleString()}
                         </div>
+                        {/* ICONS */}
                         <div className={classes.iconContainer}>
                             {orderList.items[order].kitchened && (
                                 <img
@@ -123,9 +139,6 @@ const OrderList = ({
             </div>
             <div
                 className={classes.calculationSection}
-                // style={{
-                //     backgroundColor: orderList.biang? 'skyblue' : 'white'
-                // }}
                 onClick={() => updateItems('biangAll')}
             >
                 <div className={classes.calculationItem}>

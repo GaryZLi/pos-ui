@@ -18,7 +18,7 @@ import * as types from './action-types';
 const initialState = {
     screenType: 'order',
     language: 'English',
-    focusedSection: 'Poultry & Meat Dishes', // TODO: maybe make this an object, so she can select multiple
+    focusedSection: 'Appetizers', // TODO: maybe make this an object, so she can select multiple
     focusedItems: {
         all: false,
     },
@@ -58,7 +58,7 @@ const initialState = {
             cost: num,
             quantity: num,
             name: {},
-            options: [],
+            options: {},
             kitchened: bool,
             paid: bool,
             delivery: bool,
@@ -67,10 +67,26 @@ const initialState = {
             biang: bool,
         }
         */
-        // items: [],
-        // cost: {},
-        // quantity: {},
-        // options: {},
+    },
+    modNames: {
+        English: {
+            'Add': 'Add',
+            'Less': 'Less',
+            'No': 'No',        
+            'Modify Price': 'Modify Price',
+            'Modify Quantity': 'Modify Quantity',
+            'Change': 'Change',
+            'Future': 'Future',
+        },
+        '中文': {
+            'Add 中文': 'Add 中文',
+            'Less 中文': 'Less 中文',
+            'No 中文': 'No 中文',        
+            'Modify Price 中文': 'Modify Price 中文',
+            'Modify Quantity 中文': 'Modify Quantity 中文',
+            'Change 中文': 'Change 中文',
+            'Future 中文': 'Future 中文',
+        },
     },
 };
 
@@ -270,7 +286,7 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                                         English: action.val.itemName,
                                         '中文': action.val.itemNameChinese,
                                     },
-                                    options: [],
+                                    options: {},
                                     kitchened: false,
                                     paid: false,
                                     delivery: false,
@@ -338,6 +354,36 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                 default:
                     return state;
             }
+
+        case types.UPDATE_ITEM_MODIFICATION:
+            for (const item in state.focusedItems) {
+                if (!state.focusedItems[item] || item === 'all') continue;
+
+                if (state.orderList.items[item].options[state.focusedSection]) {
+                    if (state.orderList.items[item].options[state.focusedSection][action.item]) {
+                        delete state.orderList.items[item].options[state.focusedSection][action.item];
+
+                        if (!Object.keys(state.orderList.items[item].options[state.focusedSection]).length) {
+                            delete state.orderList.items[item].options[state.focusedSection];
+                        }
+                    }
+                    else {
+                        state.orderList.items[item].options[state.focusedSection][action.item] = true;
+                    }
+                }
+                else {
+                    state.orderList.items[item].options[state.focusedSection] = {
+                        [action.item]: true,
+                    };
+                }
+            }
+
+            return {
+                ...state,
+                orderList: {
+                    ...state.orderList,
+                }
+            };
 
         default:
             return state;

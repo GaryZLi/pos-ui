@@ -133,12 +133,9 @@ export const updateOrderListInfo = (key, val) => ({
     val,
 });
 
-// export const updateCurrentBiang = biang => ({
-//     type: types.UPDATE_CURRENT_BIANG,
-//     biang,
-// });
+export const updateItemModification = item => ({
+    type: types.UPDATE_ITEM_MODIFICATION,
+    item,
+});
 
-// export const addItem = item => ({
-//     type: types.ADD_ITEM,
-//     item,
-// });
+

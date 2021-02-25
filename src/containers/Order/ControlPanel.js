@@ -62,81 +62,15 @@ const ControlPanel = ({
     language,
     focusedItems,
     focusedSection,
+    modNames,
     updateFocusedItems,
     updateFocusedSection,
 }) => {
     const classes = useStyles();
     const [sections, setSections] = useState([]);
     const [operation, setOperation] = useState();
-    const [modify, setModify] = useState();
-    const modifications = {
-        English: [
-            {
-                name: 'Add',
-                action: () => updateFocusedSection('Add'),
-            },
-            {
-                name: 'Less',
-                action: () => updateFocusedSection('Less'), 
-            },
-            {
-                name: 'No',
-                action: () => updateFocusedSection('No'),
-            },
-            {
-                name: 'Modify Price',
-                action: () => modify? setModify() : setModify('Modify Price'),
-            },
-            {
-                name: 'Modify Quantity',
-                action: () => modify? setModify() : setModify('Modify Quantity'),
-            },
-            {
-                name: 'Change',
-                action: () => updateFocusedSection('Change'),
-            },
-            {
-                name: 'Future',
-                action: () => console.log('Future'),
-            },
-        ],
-        '中文': [
-            'Add 中文',
-            'Less 中文',
-            'No 中文',
-            'Modify Price 中文',
-            'Modify Quantity 中文',
-            'Change 中文',
-            'Future 中文',
-            '+',
-            '*',
-            '-',
-            0.5,
-            1,
-            5,
-            10,
-        ],
-    };
     const numOfFocusedItems = Object.keys(focusedItems).filter(item => focusedItems[item]);
-    const operations = [
-        {
-            name: 0.5,
-            action: () => console.log(modify, operation, 0.5, numOfFocusedItems[0]),
-        },
-        {
-            name: 1,
-            action: () => console.log(modify, operation, 1, numOfFocusedItems[0]),
-        },
-        {
-            name: 5,
-            action: () => console.log(modify, operation, 5, numOfFocusedItems[0]),
-        },
-        {
-            name: 10,
-            action: () => console.log(modify, operation, 10, numOfFocusedItems[0]),
-        },
-    ];
-
+  
     // TODO: maybe create a db for the sections, with name in english and chinese
     useEffect(() => {
         const set = {};
@@ -162,6 +96,9 @@ const ControlPanel = ({
         ]);
     }, [menu]);
 
+
+    // DELETE: https://www.tiktok.com/@rachael.minjarez1/video/6931076678378671365?sender_device=pc&sender_web_id=6933057260022695430&is_from_webapp=v1&is_copy_url=0
+
     return (
         <div className={classes.rootContainer}>
             <div className={classes.sectionContainer}>
@@ -173,7 +110,6 @@ const ControlPanel = ({
                             backgroundColor: focusedSection === section.English? 'skyblue' : 'white',
                         }}
                         onMouseDown={() => updateFocusedSection(section.English)}
-                        // onMouseDown={() => updateFocusedSection(section.English)}
                     >
                         <div 
                             className={classes.sectionName}
@@ -197,17 +133,17 @@ const ControlPanel = ({
                 >
                     {language === 'English'? 'All' : 'All 中文'}
                 </button>
-                {modifications[language].map(mod => (
+                {Object.keys(modNames[language]).map(mod => (
                     <button
                         disabled={!numOfFocusedItems.length}
                         className={classes.sectionItem}
-                        key={mod.name}
+                        key={mod}
                         style={{
-                            backgroundColor: focusedSection === mod.name? 'skyblue' : 'white',
+                            backgroundColor: focusedSection === mod.replaceAll(/[^A-Za-z+\s]/g, '').trim()? 'skyblue' : 'white',
                         }}
-                        onMouseDown={mod.action}
+                        onMouseDown={() => updateFocusedSection(mod.replaceAll(/[^A-Za-z+\s]/g, '').trim())}
                     >
-                        {mod.name}
+                        {mod}
                     </button>
                 ))}
             </div>
@@ -220,19 +156,19 @@ const ControlPanel = ({
                             backgroundColor: operation === '+' && numOfFocusedItems.length === 1? 'skyblue' : 'white',
                             position: 'relative'
                         }}
-                        disabled={!modify || numOfFocusedItems.length !== 1}
+                        disabled={numOfFocusedItems.length !== 1}
                         onMouseDown={() => operation === '+'? setOperation() : setOperation('+')}
                     >
                         <div style={{
                             height: 3,
                             width: 30,
-                            backgroundColor: !modify || numOfFocusedItems.length !== 1? '#1010104d' : 'black',
+                            backgroundColor: numOfFocusedItems.length !== 1? '#1010104d' : 'black',
                             position: 'absolute'
                         }}/>
                         <div style={{
                             height: 30,
                             width: 3,
-                            backgroundColor: !modify || numOfFocusedItems.length !== 1? '#1010104d' : 'black',
+                            backgroundColor: numOfFocusedItems.length !== 1? '#1010104d' : 'black',
                             position: 'absolute'
                         }}/>
                     </button>
@@ -240,16 +176,16 @@ const ControlPanel = ({
                     <button
                         className={classes.sectionItem}
                         style={{
-                            backgroundColor: modify && operation === 'x' && numOfFocusedItems.length === 1? 'skyblue' : 'white',
+                            backgroundColor: operation === 'x' && numOfFocusedItems.length === 1? 'skyblue' : 'white',
                             position: 'relative',
                         }}
-                        disabled={!modify || numOfFocusedItems.length !== 1} // TODO: if i change out of focusedItems: all to focusedItems: {}, i must check to see if focusedItems has length
+                        disabled={numOfFocusedItems.length !== 1} // TODO: if i change out of focusedItems: all to focusedItems: {}, i must check to see if focusedItems has length
                         onMouseDown={() => operation === 'x'? setOperation() : setOperation('x')}
                     >
                         <div style={{
                             height: 3,
                             width: 30,
-                            backgroundColor: !modify || numOfFocusedItems.length !== 1? '#1010104d' : 'black',
+                            backgroundColor: numOfFocusedItems.length !== 1? '#1010104d' : 'black',
                             position: 'absolute',
                             transform: 'rotate(-45deg)',
                             borderRadius: 30,
@@ -257,7 +193,7 @@ const ControlPanel = ({
                         <div style={{
                             height: 30,
                             width: 3,
-                            backgroundColor: !modify || numOfFocusedItems.length !== 1? '#1010104d' : 'black',
+                            backgroundColor: numOfFocusedItems.length !== 1? '#1010104d' : 'black',
                             position: 'absolute',
                             transform: 'rotate(-45deg)',
                             borderRadius: 30,
@@ -267,19 +203,19 @@ const ControlPanel = ({
                     <button
                         className={classes.sectionItem}
                         style={{
-                            backgroundColor: modify && operation === '-' && numOfFocusedItems.length === 1? 'skyblue' : 'white'
+                            backgroundColor: operation === '-' && numOfFocusedItems.length === 1? 'skyblue' : 'white'
                         }}
-                        disabled={!modify || numOfFocusedItems.length !== 1}
+                        disabled={numOfFocusedItems.length !== 1}
                         onMouseDown={() => operation === '-'? setOperation() : setOperation('-')}
                     >
                         <div style={{
                             height: 3,
                             width: 30,
-                            backgroundColor: !modify || numOfFocusedItems.length !== 1? '#1010104d' : 'black',
+                            backgroundColor: numOfFocusedItems.length !== 1? '#1010104d' : 'black',
                         }}/>
                     </button>
             </div>
-            <div className={classes.sectionContainer}>
+            {/* <div className={classes.sectionContainer}>
                 {operations.map(op => (
                     <button
                         className={classes.sectionItem}    
@@ -290,7 +226,7 @@ const ControlPanel = ({
                         {op.name}
                     </button>
                 ))}
-            </div>
+            </div> */}
         </div>
     );
 };
@@ -300,11 +236,13 @@ const states = ({
     language,
     focusedItems,
     focusedSection,
+    modNames,
 }) => ({
     menu,
     language,
     focusedItems,
     focusedSection,
+    modNames,
 });
 
 const dispatches = {

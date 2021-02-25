@@ -22,8 +22,6 @@ const useStyles = makeStyles({
         width: '100%',
         display: 'flex',
         flexDirection: 'row',
-        // alignItems: 'stretch',
-        // flex: 1,
     },
 })
 
@@ -51,12 +49,8 @@ const Order = ({
     );
 };
 
-const states = ({
-}) => ({
-});
-
 const dispatches = {
     updateOrderListInfo,
 };
 
-export default connect(states, dispatches)(Order);
+export default connect(null, dispatches)(Order);

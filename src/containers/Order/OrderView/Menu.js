@@ -72,7 +72,7 @@ const Menu = ({
                 {currentMenu.map(item => (
                     <div
                         className={classes.itemContainer}
-                        key={item.itemName + Math.random()}
+                        key={item.itemName + Math.random()} // TODO: remove that fucking math.random
                         onClick={() => updateItems('add', item)}
                     >
                         <div>

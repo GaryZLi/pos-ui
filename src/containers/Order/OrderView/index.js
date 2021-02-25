@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/styles';
 import { connect } from 'react-redux';
 import Menu from './Menu';
-import { updateItems } from '../../../redux/actions';
+import Modification from './Modification';
 
 const useStyles = makeStyles({
     rootContainer: {
@@ -47,13 +47,13 @@ const OrderView = ({
             break;
 
         case 'mod':
-            currentView = 'mod';
+            currentView = <Modification/>;
             break;
 
         case 'mp':
             currentView = 'mp';
             break;
-            
+
         case 'mq':
             currentView = 'mq';
             break;
@@ -75,7 +75,4 @@ const states = ({
     focusedSection,
 });
 
-const dispatches = {
-};
-
-export default connect(states, dispatches)(OrderView);
+export default connect(states)(OrderView);
