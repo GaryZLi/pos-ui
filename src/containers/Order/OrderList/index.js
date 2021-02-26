@@ -71,7 +71,7 @@ const OrderList = ({
     };
 
     for (const item of orders) {
-        subTotal += orderList.items[item].cost * orderList.items[item].quantity;
+        subTotal += orderList.items[item].price * orderList.items[item].quantity;
     }
 
     for (const mod of modifications) {
@@ -81,7 +81,38 @@ const OrderList = ({
         };
     }
 
-    const tax = subTotal * 0.098;
+    const tax = subTotal * 0.0975;
+
+
+    const formatDate = date => {
+        let m;
+        let hour; 
+        let min = date.getMinutes();
+
+        if (date.getHours() >= 12) {
+            m = ' pm';
+
+            if (date.getHours() > 12) {
+                hour = date.getHours() - 12;
+            }
+            else {
+                hour = date.getHours()
+            }
+        }
+        else {
+            m = ' am';
+
+            if (date.getHours() === 0) {
+                hour = 12;
+            }
+            else {
+                hour = date.getHours();
+            }
+        }
+
+
+        return hour + ':' + min + m;
+    };
 
     return (
         <div className={classes.rootContainer}>
@@ -114,7 +145,7 @@ const OrderList = ({
                             ))}
                         </div>
                         <div className={classes.itemInfo}>
-                            x{orderList.items[order].quantity} {'->'} ${(orderList.items[order].cost * orderList.items[order].quantity).toFixed(2).toLocaleString()}
+                            x{orderList.items[order].quantity} {'->'} ${(orderList.items[order].price * orderList.items[order].quantity).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                         </div>
                         {/* ICONS */}
                         <div className={classes.iconContainer}>
@@ -146,6 +177,11 @@ const OrderList = ({
                                     alt='icon'
                                 />
                             )}
+                            {orderList.items[order].future && (
+                                <div>
+                                    {formatDate(new Date(orderList.items[order].future))}
+                                </div>
+                            )}
                         </div>
                     </div>
                 ))}
@@ -155,13 +191,13 @@ const OrderList = ({
                 onClick={() => updateItems('biangAll')}
             >
                 <div className={classes.calculationItem}>
-                    Subtotal: ${subTotal.toFixed(2).toLocaleString()}
+                    Subtotal: ${subTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                 </div>
                 <div className={classes.calculationItem}>
-                    Tax: ${tax.toFixed(2).toLocaleString()}
+                    Tax: ${tax.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                 </div>
                 <div className={classes.calculationItem}>
-                    Total: ${(subTotal + tax).toFixed(2).toLocaleString()}
+                    Total: ${(subTotal + tax).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                 </div>
             </div>
         </div>

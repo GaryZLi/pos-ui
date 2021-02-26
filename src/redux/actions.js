@@ -107,24 +107,11 @@ export const updateFocusedSection = section => ({
     section,
 });
 
-// actions should be arrays
-/*
-[{
-    name: chow mein,
-    action: ({cost}) => cost += 10
-},
-{
-    name: lool,
-    action: 
-}]
-*/
-// [chow main, fried rice]
-// [togo, less salt]
-export const updateItems = (key, val, action) => ({
+export const updateItems = (key, val, a) => ({
     type: types.UPDATE_ITEMS,
     key,
     val,
-    action,
+    a,
 });
 
 export const updateOrderListInfo = (key, val) => ({
@@ -133,6 +120,7 @@ export const updateOrderListInfo = (key, val) => ({
     val,
 });
 
+// DELETE?
 // export const updateItemModification = item => ({
 //     type: types.UPDATE_ITEM_MODIFICATION,
 //     item,

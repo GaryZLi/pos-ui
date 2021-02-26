@@ -29,9 +29,10 @@ const useStyles = makeStyles({
 
 const Future = ({
     language,
+    updateItems,
 }) => {
     const classes = useStyles();
-    const [printerTime, setPrinterTime] = useState();
+    const [printerTime, setPrinterTime] = useState(); // TODO: future printer date
 
     // work on the printer time
 
@@ -63,6 +64,7 @@ const states = ({
 });
 
 const dispatches = {
+    updateItems,
 };
 
 export default connect(states, dispatches)(Future);

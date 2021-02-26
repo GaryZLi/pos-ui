@@ -58,7 +58,7 @@ const initialState = {
         total: 0,
         /*
         [name]: {
-            cost: num,
+            price: num,
             quantity: num,
             name: {},
             options: {},
@@ -303,6 +303,7 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                     };
 
                 case 'add':
+                    // TODO: v this and not deleted
                     if (state.orderList.items[action.val.itemName]) {
                         return {
                             ...state,
@@ -332,7 +333,7 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                                 [action.val.itemName]: {
                                     ...state.orderList.items[action.val.itemName],
                                     quantity: 1,
-                                    cost: parseFloat(action.val.price),
+                                    price: parseFloat(action.val.price),
                                     name: {
                                         English: action.val.itemName,
                                         '中文': action.val.itemNameChinese,
@@ -377,6 +378,40 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                     }
 
                     state.orderList.biang = !state.orderList.biang;
+
+                    return {
+                        ...state,
+                        orderList: {
+                            ...state.orderList,
+                        }
+                    };
+
+                case 'future':
+                    for (const item in state.focusedItems) {
+                        if (!state.focusedItems[item] || item === 'all') continue;
+        
+                        state.orderList.items[item].future = action.val;
+                    }
+
+                    return {
+                        ...state,
+                        orderList: {
+                            ...state.orderList,
+                        },
+                    };
+
+                case 'quantity':
+                    state.orderList.items[action.val].quantity = action.a;
+
+                    return {
+                        ...state,
+                        orderList: {
+                            ...state.orderList,
+                        }
+                    };
+
+                case 'price':
+                    state.orderList.items[action.val].price = action.a;
 
                     return {
                         ...state,

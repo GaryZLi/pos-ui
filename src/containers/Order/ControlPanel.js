@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/styles';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import {
     updateFocusedItems,
@@ -70,8 +70,6 @@ const ControlPanel = ({
     const [sections, setSections] = useState([]);
     const numOfFocusedItems = Object.keys(focusedItems).filter(item => focusedItems[item] && item !== 'all');
   
-    console.log(numOfFocusedItems.length)
-
     // TODO: maybe create a db for the sections, with name in english and chinese
     useEffect(() => {
         const set = {};
@@ -96,7 +94,6 @@ const ControlPanel = ({
             })
         ]);
     }, [menu]);
-
 
     // DELETE: https://www.tiktok.com/@rachael.minjarez1/video/6931076678378671365?sender_device=pc&sender_web_id=6933057260022695430&is_from_webapp=v1&is_copy_url=0
 
@@ -155,70 +152,7 @@ const ControlPanel = ({
                 ))}
             </div>
             <div className={classes.divider} />
-            {/* <div className={classes.sectionContainer}>
-                    <button
-                        className={classes.sectionItem}
-                        style={{
-                            backgroundColor: operation === '+' && numOfFocusedItems.length === 1? 'skyblue' : 'white',
-                            position: 'relative'
-                        }}
-                        disabled={numOfFocusedItems.length !== 1}
-                        onMouseDown={() => operation === '+'? setOperation() : setOperation('+')}
-                    >
-                        <div style={{
-                            height: 3,
-                            width: 30,
-                            backgroundColor: numOfFocusedItems.length !== 1? '#1010104d' : 'black',
-                            position: 'absolute'
-                        }}/>
-                        <div style={{
-                            height: 30,
-                            width: 3,
-                            backgroundColor: numOfFocusedItems.length !== 1? '#1010104d' : 'black',
-                            position: 'absolute'
-                        }}/>
-                    </button>
-                    <button
-                        className={classes.sectionItem}
-                        style={{
-                            backgroundColor: operation === 'x' && numOfFocusedItems.length === 1? 'skyblue' : 'white',
-                            position: 'relative',
-                        }}
-                        disabled={numOfFocusedItems.length !== 1} // TODO: if i change out of focusedItems: all to focusedItems: {}, i must check to see if focusedItems has length
-                        onMouseDown={() => operation === 'x'? setOperation() : setOperation('x')}
-                    >
-                        <div style={{
-                            height: 3,
-                            width: 30,
-                            backgroundColor: numOfFocusedItems.length !== 1? '#1010104d' : 'black',
-                            position: 'absolute',
-                            transform: 'rotate(-45deg)',
-                            borderRadius: 30,
-                        }}/>
-                        <div style={{
-                            height: 30,
-                            width: 3,
-                            backgroundColor: numOfFocusedItems.length !== 1? '#1010104d' : 'black',
-                            position: 'absolute',
-                            transform: 'rotate(-45deg)',
-                            borderRadius: 30,
-                        }}/>
-                    </button>
-                    <button
-                        className={classes.sectionItem}
-                        style={{
-                            backgroundColor: operation === '-' && numOfFocusedItems.length === 1? 'skyblue' : 'white'
-                        }}
-                        disabled={numOfFocusedItems.length !== 1}
-                        onMouseDown={() => operation === '-'? setOperation() : setOperation('-')}
-                    >
-                        <div style={{
-                            height: 3,
-                            width: 30,
-                            backgroundColor: numOfFocusedItems.length !== 1? '#1010104d' : 'black',
-                        }}/>
-                    </button>
-            </div> */}
+            
 
             {/* <div className={classes.sectionContainer}>
                 {operations.map(op => (
