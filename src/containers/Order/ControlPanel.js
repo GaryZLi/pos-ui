@@ -151,21 +151,6 @@ const ControlPanel = ({
                     </button>
                 ))}
             </div>
-            <div className={classes.divider} />
-            
-
-            {/* <div className={classes.sectionContainer}>
-                {operations.map(op => (
-                    <button
-                        className={classes.sectionItem}    
-                        key={op.name}
-                        disabled={!operation || numOfFocusedItems.length !== 1}
-                        onMouseDown={op.action}
-                    >
-                        {op.name}
-                    </button>
-                ))}
-            </div> */}
         </div>
     );
 };

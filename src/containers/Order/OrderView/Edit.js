@@ -56,17 +56,53 @@ const useStyles = makeStyles({
 });
 
 const Value = ({
-    focusedItems,
     language,
     selectedItem,
     invalidSelection,
+    quantity,
+    price,
     updateItems,
 }) => {
     const classes = useStyles();
-    const [operation, setOperation] = useState();
+    const [operation, setOperation] = useState('+');
     const [focus, setFocus] = useState('quantity');
+    const labels = {
+        quantity: {
+            English: 'Quantity',
+            '中文': 'Quantity 中文',
+        },
+        price: {
+            English: 'Price',
+            '中文': 'Price 中文',
+        }
+    };
 
     if (invalidSelection) return <div />;
+
+    const getOperationVal = num => {
+        if (focus === 'quantity') {
+            if (operation === '+') {
+                return num + quantity;
+            }
+            else if (operation === 'x') {
+                return num * quantity;
+            }
+            else if (operation === '-') {
+                return Math.max(quantity - num, 0);
+            }
+        }
+        else {
+            if (operation === '+') {
+                return num + price;
+            }
+            else if (operation === 'x') {
+                return num * price;
+            }
+            else if (operation === '-') {
+                return Math.max(price - num, 0);
+            }
+        }
+    };
 
     return (
         <div className={classes.rootContainer}>
@@ -74,30 +110,33 @@ const Value = ({
                 <TextField
                     className={classes.item}
                     type={'number'}
-                    label='Quantity'
+                    label={labels.quantity[language]}
+                    placeholder={labels.quantity[language]}
                     variant='outlined'
                     onChange={e => updateItems('quantity', selectedItem, e.target.value)}
                     onMouseDown={() => setFocus('quantity')}
-                    // focused={focus === 'quantity'}
+                    focused={focus === 'quantity'}
+                    value={quantity.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                 />
                 <TextField
                     className={classes.item}
-                    label="Price"
+                    label={labels.price[language]}
+                    placeholder={labels.price[language]}
                     type={'number'}
                     variant='outlined'
                     onChange={e => updateItems('price', selectedItem, e.target.value)}
                     onMouseDown={() => setFocus('price')}
-                    // focused={focus === 'price'}
+                    focused={focus === 'price'}
+                    value={price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                 />
                 <div className={classes.padContainer}>
                     <div>
-                        {/* ADD */}
                         <div
                             className={classes.pad}
                             style={{
                                 borderColor: operation === '+'? 'blue' : 'gray'
                             }}
-                            onMouseDown={() => operation === '+'? setOperation() : setOperation('+')}
+                            onMouseDown={() => setOperation('+')}
                         >
                             <div style={{
                                 height: 2,
@@ -117,10 +156,10 @@ const Value = ({
                             className={classes.pad}
                             style={{
                                 position: 'relative',
-                                marginTop: 7,
-                                borderColor: operation === 'x'? 'blue' : 'gray'
+                                borderColor: operation === 'x'? 'blue' : 'gray',
+                                marginTop: 6
                             }}
-                            onMouseDown={() => operation === 'x'? setOperation() : setOperation('x')}
+                            onMouseDown={() => setOperation('x')}
                         >
                             <div style={{
                                 height: 2,
@@ -143,69 +182,67 @@ const Value = ({
                         <div
                             className={classes.pad}
                             style={{
-                                marginTop: 7,
-                                borderColor: operation === '-'? 'blue' : 'gray'
+                                borderColor: operation === '-'? 'blue' : 'gray',
+                                marginTop: 6
                             }}
-                            onMouseDown={() => operation === '-'? setOperation() : setOperation('-')}
+                            onMouseDown={() => setOperation('-')}
                         >
                             <div 
                                 style={{
                                     height: 2,
                                     width: 20,
-                                    marginTop: 7,
                                     backgroundColor: 'black',
                                 }}
                             />
                         </div>
                     </div>
                     <div className={classes.numPadContainer}>
-                        {Array(9).fill(0).map((e, i) => (
+                        {Array(9).fill(0).map((a, num) => (
                             <div
                                 className={classes.pad}
-                                key={i}
+                                key={num}
+                                onMouseDown={() => updateItems(focus, selectedItem, getOperationVal(num + 1))}
                             >
-                                {i + 1}
+                                {num + 1}
                             </div>
                         ))}
                     </div>
                 </div>
-                <div 
+                <div
+                    className={classes.pad}
+                    style={{
+                        width: 165,
+                        marginLeft: 'auto',
+                        marginRight: 37,
+                    }}
+                    onMouseDown={() => updateItems(focus, selectedItem, getOperationVal(0.5))}
+                >
+                    0.5
+                </div>
+                
+                
+                {/* <div 
                     style={{
                         display: 'flex',
-                        justifyContent: 'space-between'
+                        marginTop: 10,
                     }}
                 >
-                    {/* dot */}
-                    <div
-                        className={classes.pad}
-                        style={{
-                            height: 50,
-                            width: 50,
-                            border: '1px solid gray',
-                            marginLeft: 3,
-                        }}
-                    >
+                    {nums.map(num => (
                         <div
+                            className={classes.pad}
+                            key={num}
                             style={{
-                                height: 3,
-                                width: 3,
-                                borderRadius: '50%',
-                                backgroundColor: 'black',
+                                height: 50,
+                                width: 50,
+                                border: '1px solid gray',
+                                marginLeft: 3,
                             }}
-                        />
-                    </div>
-                    {/* ZERO */}
-                    <div
-                        className={classes.pad}
-                        style={{
-                            height: 50,
-                            width: 165,
-                            border: '1px solid gray',
-                        }}
-                    >
-                        0
-                    </div>
-                </div>
+                            onMouseDown={() => updateItems(focus, selectedItem, getOperationVal(num))}
+                        >
+                            {num}
+                        </div>
+                    ))}
+                </div> */}
             </div>
         </div>
     );
@@ -214,6 +251,7 @@ const Value = ({
 const states = ({
     focusedItems,
     language,
+    orderList,
 }) => {
     let selectedItems = [];
 
@@ -230,9 +268,10 @@ const states = ({
     }
 
     return {
-        focusedItems,
         language,
         selectedItem: selectedItems[0],
+        quantity: orderList.items[selectedItems[0]].quantity,
+        price: orderList.items[selectedItems[0]].price,
     }
 };
 
