@@ -68,7 +68,10 @@ const Panel = ({
                 '中文': 'Kitchen All 中文',
                 English: 'Kitchen All',
             },
-            action: () => updateItems('kitchenAll'),
+            action: () => {
+                updateItems('kitchenAll');
+                updateItems('deleteAll');
+            },
         },
         {
             iconSrc: payIcon,
@@ -92,7 +95,7 @@ const Panel = ({
                 '中文': 'Delivery 中文',
                 English: 'Delivery',
             },
-            action: () => updateLanguage(language),
+            action: () => updateItems('delivery'),
         },
         {
             iconSrc: deliveryAllIcon,
@@ -100,7 +103,10 @@ const Panel = ({
                 '中文': 'Delivery All 中文',
                 English: 'Delivery All',
             },
-            action: () => updateLanguage(language),
+            action: () => {
+                updateItems('deliveryAll');
+                updateItems('deleteAll');
+            },
         },
         {
             iconSrc: deleteIcon,
@@ -108,7 +114,7 @@ const Panel = ({
                 '中文': 'delete 中文',
                 English: 'delete',
             },
-            action: () => console.log('delete'),
+            action: () => updateItems('delete'),
         },
         {
             iconSrc: deleteAllIcon,
@@ -116,7 +122,7 @@ const Panel = ({
                 '中文': 'Delete All 中文',
                 English: 'Delete All',
             },
-            action: () => console.log('Delete All'),
+            action: () => updateItems('deleteAll'),
         },
         {
             iconSrc: settingIcon,

@@ -8,6 +8,8 @@ import {
 import kitchenIcon from '../../../picSrc/kitchen.svg';
 import moneyIcon from '../../../picSrc/money.png';
 import checkIcon from '../../../picSrc/check.svg';
+import clockIcon from '../../../picSrc/clock.svg';
+import deliveryIcon from '../../../picSrc/delivery.svg';
 
 const useStyles = makeStyles({
     rootContainer: {
@@ -144,9 +146,7 @@ const OrderList = ({
                                 </div>
                             ))}
                         </div>
-                        <div className={classes.itemInfo}>
-                            x{orderList.items[order].quantity} {'->'} ${(orderList.items[order].price * orderList.items[order].quantity).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
-                        </div>
+                        
                         {/* ICONS */}
                         <div className={classes.iconContainer}>
                             {orderList.items[order].kitchened && (
@@ -170,6 +170,23 @@ const OrderList = ({
                                     alt='icon'
                                 />
                             )}
+                            {orderList.items[order].delivery && (
+                                <img
+                                    className={classes.icon}
+                                    src={deliveryIcon}
+                                    alt='icon'
+                                />
+                            )}
+                            {orderList.items[order].future && (
+                                <div style={{display: 'flex'}}>
+                                    {formatDate(new Date(orderList.items[order].future))}
+                                    <img
+                                        className={classes.icon}
+                                        src={clockIcon}
+                                        alt='icon'
+                                    />
+                                </div>
+                            )}
                             {orderList.items[order].biang && (
                                 <img
                                     className={classes.icon}
@@ -177,11 +194,14 @@ const OrderList = ({
                                     alt='icon'
                                 />
                             )}
-                            {orderList.items[order].future && (
-                                <div>
-                                    {formatDate(new Date(orderList.items[order].future))}
-                                </div>
-                            )}
+                        </div>
+                        <div 
+                            className={classes.itemInfo}
+                            style={{
+                                borderTop: '1px dotted gray'
+                            }}
+                        >
+                            x{orderList.items[order].quantity} {'->'} ${(orderList.items[order].price * orderList.items[order].quantity).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                         </div>
                     </div>
                 ))}

@@ -10,9 +10,11 @@
 - under charge, in case someone card declines, or switch payment etc
 - select certain items button -> maybe focusedItems to focusedItemss = {}
 
+- the menu should have a list opping up and price null IF it has options
+- should have alert on reject phones,
+
 
 -----
-1) when open takeout, it should be togo
 2) if open a table, the type should be dinein
 3) delivery all will change the type to delivery
 4) on kitchen All, delivery all

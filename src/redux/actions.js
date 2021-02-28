@@ -14,8 +14,8 @@ export const updateMessage = message => {
             break;
 
         case 'phoneResults':
-            type = types.UPDATE_PHONE_NUMS;
-            key = 'phoneNums';
+            type = types.UPDATE_PHONE_OPTIONS;
+            key = 'phoneOptions';
             val = JSON.parse(message.data);
             break;
 
@@ -80,6 +80,11 @@ export const updateLanguage = language => ({
 export const updatePhoneNums = phoneNums => ({
     type: types.UPDATE_PHONE_NUMS,
     phoneNums,
+});
+
+export const updatePhoneOptions = phoneOptions => ({
+    type: types.UPDATE_PHONE_OPTIONS,
+    phoneOptions,
 });
 
 export const updateAddresses = addresses => ({

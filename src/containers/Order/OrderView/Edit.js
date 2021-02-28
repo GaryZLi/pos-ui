@@ -116,7 +116,7 @@ const Value = ({
                     onChange={e => updateItems('quantity', selectedItem, e.target.value)}
                     onMouseDown={() => setFocus('quantity')}
                     focused={focus === 'quantity'}
-                    value={quantity.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                    value={quantity.toLocaleString('en-US', {maximumFractionDigits: 2})}
                 />
                 <TextField
                     className={classes.item}
@@ -131,6 +131,7 @@ const Value = ({
                 />
                 <div className={classes.padContainer}>
                     <div>
+                        {/* ADD */}
                         <div
                             className={classes.pad}
                             style={{
@@ -194,6 +195,25 @@ const Value = ({
                                     backgroundColor: 'black',
                                 }}
                             />
+                        </div>
+                        {/* DELETE */}
+                        <div
+                            className={classes.pad}
+                            style={{
+                                borderColor: operation === 'delete'? 'blue' : 'gray',
+                                marginTop: 6
+                            }}
+                            onMouseDown={() => setOperation('delete')}
+                        >
+                            <div 
+                                style={{
+                                    height: 2,
+                                    width: 20,
+                                    backgroundColor: 'black',
+                                }}
+                            >
+                                d
+                            </div>
                         </div>
                     </div>
                     <div className={classes.numPadContainer}>

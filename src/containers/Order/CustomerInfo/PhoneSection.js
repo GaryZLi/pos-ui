@@ -8,6 +8,7 @@ import {
     ListItem,
     ListItemText,
 } from '@material-ui/core'
+import { updatePhoneNums } from '../../../redux/actions';
 
 const useStyles = makeStyles({
     rootContainer: {
@@ -59,30 +60,31 @@ const placeholders = {
 const PhoneSection = ({
     ws,
     language,
+    phoneOptions,
     phoneNums,
+    updatePhoneNums,
 }) => {
     const classes = useStyles();
-    const [phones, setPhones] = useState(['']);
+    // const [phones, setPhones] = useState(['']);
     const [currentFocus, setCurrentFocus] = useState();
 
     const handlePhoneInput = (val, id) => {
         val = val.replace(/[^0-9]/g, '');
 
         if (val.length > 10) return;
-        if (phones[id].length === val.length) val = val.substring(0, val.length - 1);
+        if (phoneNums[id].length === val.length) val = val.substring(0, val.length - 1);
 
-        setPhones(prev => {
-            prev[id] = val;
+        phoneNums[id] = val;
+        updatePhoneNums([...phoneNums]);
 
-            return [
-                ...prev,
-            ];
-        });
 
         if (val.length === 10) {
-            const customerId = phoneNums.find(phone => phone.phoneNum === phones[id]).customerId;
-            ws.send('getCustomerInfo|' + customerId);
-            ws.send('getAddresses|' + customerId);
+            const customerId = phoneOptions.find(phone => phone.phoneNum === phoneNums[id])?.customerId;
+            
+            if (customerId) {
+                ws.send('getCustomerInfo|' + customerId);
+                ws.send('getAddresses|' + customerId);
+            }
         }
         else if (val.length) {
             ws.send('getPhone|' + val);
@@ -106,7 +108,7 @@ const PhoneSection = ({
 
     return (
         <div className={classes.rootContainer}>
-            {phones.map((phone, id) => (
+            {phoneNums.map((num, id) => (
                 <div
                     className={classes.textListContainer}
                     key={id}
@@ -115,19 +117,19 @@ const PhoneSection = ({
                         autoComplete='chrome-off'
                         placeholder={`${placeholders[language]}`}
                         className={classes.textField}
-                        value={formatPhoneNum(phone)}
+                        value={formatPhoneNum(num)}
                         onChange={e => handlePhoneInput(e.target.value, id)}
                         onFocus={() => setCurrentFocus(id)}
                         onBlur={() => setTimeout(() => setCurrentFocus(null), 200)}
                     />
                     <Collapse
                         className={classes.list}
-                        in={currentFocus === id && phoneNums.length !== 0}
+                        in={currentFocus === id && phoneOptions.length !== 0}
                         timeout="auto"
                         unmountOnExit
                     >
                         <Paper component="div" >
-                            {phoneNums.map(option => (
+                            {phoneOptions.map(option => (
                                 <ListItem
                                     key={option.phoneNum}
                                     button
@@ -144,10 +146,7 @@ const PhoneSection = ({
             ))}
             <div
                 className={classes.add}
-                onClick={() => setPhones(prev => ([
-                    ...prev,
-                    '',
-                ]))}
+                onClick={() => updatePhoneNums([...phoneNums, ''])}
             >
                 +
             </div>
@@ -156,16 +155,19 @@ const PhoneSection = ({
 };
 
 const states = ({
-    phoneNums,
     language,
     ws,
+    phoneOptions,
+    phoneNums,
 }) => ({
-    phoneNums,
     language,
     ws,
+    phoneOptions,
+    phoneNums,
 });
 
 const dispatches = {
+    updatePhoneNums,
 };
 
 export default connect(states, dispatches)(PhoneSection);

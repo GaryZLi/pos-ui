@@ -21,35 +21,37 @@ const initialState = {
     focusedSection: {
         English: 'Appetizers',
         '中文': 'Appetizers 中文',
-    }, // TODO: maybe make this an object, so she can select multiple
+    }, 
     focusedItems: {
         all: false,
     },
     settings: null,
-    dinein: {},
-    togo: {},
-    delivery: {},
-    phoneNums: [], // TODO: move these shit inside orderList
-    addresses: [], // TODO: move these shit inside orderList
+    // dinein: {}, // TODO: delete?
+    // togo: {}, // TODO: delete?
+    // delivery: {}, // TODO: delete?
+    phoneNums: [''],
+    phoneOptions: [], // TODO: move these shit inside orderList
+    addresses: [{
+        street: '',
+        city: '',
+        distance: ''
+    }], // TODO: move these shit inside orderList
     addressOptions: [],
     orders: [], // maybe dont need becuz we can keep track of everything in the dinein, togo, delivery objects
     menu: [],
     modifications: [],
-    totalNum: 0,
+    totalNum: 0, // TODO: delete?
     /*
         currentNum = totalNum - orderNum;
 
         if (currentNum === 0) orderNum = 
     */
-    orderNum: 0, // when should be increment this fucker?
+    orderNum: 1, // when should be increment this fucker?
     orderList: {
         biang: false,
-        deleted: false,
+        deleted: false, // used for shit if already billed, deleted the order from the objects
         paid: false, // all paid
-        type: '',
-        // delivery: false, /* prob dont need becuz we'll use the other object */ i dont even know LMAO
-        // takeOut: false,
-        // table: null,
+        type: 'togo',
         orderNum: null,
         date: null,
         items: {},
@@ -97,29 +99,21 @@ const initialState = {
             English: 'Change',
             '中文': 'Change 中文',
         },
-
-        // English: {
-        //     'Add': 'Add',
-        //     'Less': 'Less',
-        //     'No': 'No',        
-        //     'Edit': 'Edit',
-        //     'Future': 'Future',
-        //     'Change': 'Change',
-        //     // 'Modify Price': 'Modify Price',
-        //     // 'Modify Quantity': 'Modify Quantity',
-        // },
-        // '中文': {
-        //     'Add 中文': 'Add 中文',
-        //     'Less 中文': 'Less 中文',
-        //     'No 中文': 'No 中文',        
-        //     // 'Modify Price': 'Modify Price 中文',
-        //     'Edit 中文': 'Edit 中文',
-        //     // 'Modify Quantity': 'Modify Quantity 中文',
-        //     'Future 中文': 'Future 中文',
-        //     'Change 中文': 'Change 中文',
-        // },
     },
 };
+
+// const itemShape = {
+//     price: 0,
+//     quantity: 0,
+//     name: {},
+//     options: {},
+//     kitchened: false,
+//     paid: false,
+//     delivery: false,
+//     togo: false,
+//     deleted: false,
+//     biang: false,
+// };
 
 const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
     switch (action.type) {
@@ -155,8 +149,14 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
         case types.UPDATE_PHONE_NUMS:
             return {
                 ...state,
-                phoneNums: [
-                    ...action.phoneNums,
+                phoneNums: [...state.phoneNums],
+            };
+
+        case types.UPDATE_PHONE_OPTIONS:
+            return {
+                ...state,
+                phoneOptions: [
+                    ...action.phoneOptions,
                 ],
             };
 
@@ -274,24 +274,9 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                     };
 
                 case 'kitchen':
-                    if (!state.focusedItems) return state;
+                    for (const item in state.focusedItems) {
+                        if (item === 'all' || !state.focusedItems[item]) continue;
 
-                    return {
-                        ...state,
-                        orderList: {
-                            ...state.orderList,
-                            items: {
-                                ...state.orderList.items,
-                                [state.focusedItems]: {
-                                    ...state.orderList.items[state.focusedItems],
-                                    kitchened: true,
-                                }
-                            }
-                        }
-                    };
-
-                case 'kitchenAll':
-                    for (const item in state.orderList.items) {
                         state.orderList.items[item].kitchened = true;
                     }
 
@@ -302,9 +287,35 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                         }
                     };
 
+                case 'kitchenAll':
+                    for (const item in state.orderList.items) {
+                        state.orderList.items[item].kitchened = true;
+                        state.orderList.items[item].togo = state.orderList.type === 'togo';
+                    }
+
+                    state.orderList.orderNum = state.orderNum;
+                    state.orderList.customer = {
+                        addresses: [...state.addresses],
+                        phoneOptions: [...state.phoneOptions],
+                    };
+
+                    return {
+                        ...state,
+                        orders: [
+                            ...state.orders,
+                            state.orderList,
+                        ],
+                        screenType: 'main',
+                        orderNum: state.orderNum + 1,
+                    };
+
                 case 'add':
                     // TODO: v this and not deleted
-                    if (state.orderList.items[action.val.itemName]) {
+                    // itemShape
+                    // if (state.orderList.items[action.val.itemName].deleted) {
+
+                    // }
+                    if (state.orderList.items[action.val.itemName] && !state.orderList.items[action.val.itemName].deleted) {
                         return {
                             ...state,
                             orderList: {
@@ -365,6 +376,7 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                         }
                     };
 
+                    // TODO: need to work on biang and biangall
                 case 'biangAll':
                     if (state.orderList.biang) {
                         for (const item in state.orderList.items) {
@@ -420,6 +432,100 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                         }
                     };
 
+                case 'delete':
+                    for (const item in state.focusedItems) {
+                        if (item === 'all' || !state.focusedItems[item]) continue;
+
+                        state.focusedItems[item] = false;
+                        state.orderList.items[item].deleted = true;
+                    }
+
+                    return {
+                        ...state,
+                        orderList: {
+                            ...state.orderList,
+                        },
+                        focusedItems: {
+                            ...state.focusedItems,
+                        }
+                    };
+
+                case 'deleteAll':
+                    return {
+                        ...state,
+                        focusedSection: {
+                            ...initialState.focusedSection,
+                        },
+                        focusedItems: {
+                            ...initialState.focusedItems,
+                        },
+                        orderList: {
+                            ...initialState.orderList,
+                        },
+                        addresses: [{
+                            street: '',
+                            city: '',
+                            distance: ''
+                        }],
+                        addressOptions: [],
+                        phoneNums: [''],
+                        phoneOptions: [],
+                        customerInfo: null,
+                    };
+
+                case 'delivery':
+                    for (const item in state.focusedItems) {
+                        if (item === 'all' || !state.focusedItems[item]) continue;
+
+                        state.orderList.items[item].delivery = true;
+                    }
+
+                    return {
+                        ...state,
+                        orderList: {
+                            ...state.orderList,
+                        }
+                    };
+
+                case 'deliveryAll':
+                    if (!Object.keys(state.orderList.items).length) return state;
+
+                    for (const item in state.orderList.items) {
+                        state.orderList.items[item].delivery = true;
+                    }
+
+                    state.orderList.type = 'delivery';
+                    state.orderList.orderNum = state.orderNum;
+                    state.orderList.customer = {
+                        addresses: [...state.addresses],
+                        phoneOptions: [...state.phoneOptions],
+                    };
+
+                    // orderList: {
+                        //     ...initialState.orderList,
+                        //     customer: {
+                        //         addresses: [...state.addresses],
+                        //         phoneOptions: [...state.phoneOptions],
+                        //     },
+                        // },
+
+                    return {
+                        ...state,
+                        focusedSection: {
+                            ...initialState.focusedSection,
+                        },
+                        focusedItems: {
+                            ...initialState.focusedItems,
+                        },
+                        orders: [
+                            ...state.orders,
+                            state.orderList,
+                        ],
+                        screenType: 'main',
+                        orderNum: state.orderNum + 1,
+                    };
+    
+
                 default:
                     return {
                         ...state,
@@ -440,36 +546,6 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                 default:
                     return state;
             }
-
-        // case types.UPDATE_ITEM_MODIFICATION:
-            // for (const item in state.focusedItems) {
-            //     if (!state.focusedItems[item] || item === 'all') continue;
-
-            //     if (state.orderList.items[item].options[state.focusedSection.English]) {
-            //         if (state.orderList.items[item].options[state.focusedSection.English][action.item]) {
-            //             delete state.orderList.items[item].options[state.focusedSection.English][action.item];
-
-            //             if (!Object.keys(state.orderList.items[item].options[state.focusedSection.English]).length) {
-            //                 delete state.orderList.items[item].options[state.focusedSection.English];
-            //             }
-            //         }
-            //         else {
-            //             state.orderList.items[item].options[state.focusedSection.English][action.item] = true;
-            //         }
-            //     }
-            //     else {
-            //         state.orderList.items[item].options[state.focusedSection.English] = {
-            //             [action.item]: true,
-            //         };
-            //     }
-            // }
-
-            // return {
-            //     ...state,
-            //     orderList: {
-            //         ...state.orderList,
-            //     }
-            // };
 
         default:
             return state;

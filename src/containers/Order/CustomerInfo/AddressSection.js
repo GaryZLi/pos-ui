@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/styles';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { connect } from 'react-redux';
 import {
     TextField,
@@ -8,8 +8,7 @@ import {
     ListItem,
     ListItemText,
 } from '@material-ui/core'
-import {
-} from '../../../redux/actions';
+import { updateAddresses } from '../../../redux/actions';
 
 const useStyles = makeStyles({
     rootContainer: {
@@ -70,24 +69,20 @@ const AddressSection = ({
     language,
     addresses,
     addressOptions,
+    updateAddresses,
 }) => {
     const classes = useStyles();
-    const [customerAddresses, setCustomerAddresses] = useState([{
-        street: '',
-        city: '',
-    }]);
+    // const [customerAddresses, setCustomerAddresses] = useState([{
+    //     street: '',
+    //     city: '',
+    // }]);
     const [currentFocus, setCurrentFocus] = useState();
 
     const handleAddressInput = (val, id, key) => {
-        setCustomerAddresses(prev => {
-            prev[id][key] = val;
+        addresses[id][key] = val;
+        updateAddresses([...addresses]);
 
-            return [
-                ...prev,
-            ];
-        });
-
-        if (val.length) ws.send('getAddressInput|' + val);
+        if (val.length) ws.send('getAddress|' + val);
     };
 
     const checkDistance = id => {
@@ -111,19 +106,19 @@ const AddressSection = ({
         return placeholder[section][language];
     };
 
-    useEffect(() => {
-        if (!addresses.length) return;
+    // useEffect(() => {
+    //     if (!addresses.length) return;
         
-        setCustomerAddresses(() => [
-            ...addresses,
-        ]);
+    //     setCustomerAddresses(() => [
+    //         ...addresses,
+    //     ]);
 
-        //eslint-disable-next-line
-    }, [addresses]);
+    //     //eslint-disable-next-line
+    // }, [addresses]);
 
     return (
         <div className={classes.rootContainer}>
-            {customerAddresses.map((address, id) => (
+            {addresses.map((address, id) => (
                 <div
                     className={classes.textListContainer}
                     key={id}
@@ -138,7 +133,7 @@ const AddressSection = ({
                         onBlur={() => setTimeout(() => setCurrentFocus(null), 100)}
                     />
                     <Collapse
-                        in={currentFocus === id /*&& phoneNums.length !== 0*/}
+                        in={currentFocus === id /*&& phoneOptions.length !== 0*/}
                         timeout="auto"
                         unmountOnExit
                     >
@@ -174,7 +169,7 @@ const AddressSection = ({
                         onBlur={() => setTimeout(() => setCurrentFocus(null), 100)}
                     />
                     <Collapse
-                        in={currentFocus === id /*&& phoneNums.length !== 0*/}
+                        in={currentFocus === id /*&& phoneOptions.length !== 0*/}
                         className={classes.list}
                         timeout="auto"
                         unmountOnExit
@@ -209,13 +204,13 @@ const AddressSection = ({
             ))}
             <div
                 className={classes.add}
-                onClick={() => setCustomerAddresses(prev => ([
-                    ...prev,
+                onClick={() => updateAddresses([
+                    ...addresses,
                     {
                         street: '',
                         city: '',
                     },
-                ]))}
+                ])}
             >
                 +
             </div>
@@ -236,6 +231,7 @@ const states = ({
 });
 
 const dispatches = {
+    updateAddresses,
 };
 
 export default connect(states, dispatches)(AddressSection);
