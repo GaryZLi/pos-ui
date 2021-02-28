@@ -17,6 +17,7 @@ import exitIcon from '../../picSrc/exit.svg';
 import {
     updateItems,
     updateLanguage,
+    updateOrderListInfo,
     updateScreenType,
 } from '../../redux/actions';
 
@@ -32,9 +33,11 @@ const useStyles = makeStyles({
 
 const Panel = ({
     language,
+    orderNum,
     updateLanguage,
     updateScreenType,
     updateItems,
+    updateOrderListInfo,
 }) => {
 
     const panelList = [
@@ -70,7 +73,7 @@ const Panel = ({
             },
             action: () => {
                 updateItems('kitchenAll');
-                updateItems('deleteAll');
+                updateOrderListInfo('new');
             },
         },
         {
@@ -105,7 +108,7 @@ const Panel = ({
             },
             action: () => {
                 updateItems('deliveryAll');
-                updateItems('deleteAll');
+                updateOrderListInfo('new');
             },
         },
         {
@@ -122,7 +125,7 @@ const Panel = ({
                 '中文': 'Delete All 中文',
                 English: 'Delete All',
             },
-            action: () => updateItems('deleteAll'),
+            action: () => updateOrderListInfo('delete', orderNum),
         },
         {
             iconSrc: settingIcon,
@@ -146,7 +149,13 @@ const Panel = ({
                 '中文': 'exit 中文',
                 English: 'exit'
             },
-            action: () => updateScreenType('main'),
+            action: () => {
+                updateScreenType('main');
+
+                if (orderNum) {
+                    updateOrderListInfo('update', orderNum);
+                }
+            },
         },
     ];
 
@@ -168,14 +177,17 @@ const Panel = ({
 
 const states = ({
     language,
+    orderList,
 }) => ({
     language,
+    orderNum: orderList.orderNum
 });
 
 const dispatches = {
     updateLanguage,
     updateScreenType,
     updateItems,
+    updateOrderListInfo,
 };
 
 export default connect(states, dispatches)(Panel);

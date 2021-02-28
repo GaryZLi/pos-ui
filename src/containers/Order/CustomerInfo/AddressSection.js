@@ -221,13 +221,12 @@ const AddressSection = ({
 const states = ({
     ws,
     language,
-    addresses,
-    addressOptions,
+    orderList,
 }) => ({
     ws,
     language,
-    addresses,
-    addressOptions,
+    addresses: orderList.addresses,
+    addressOptions: orderList.addressOptions,
 });
 
 const dispatches = {

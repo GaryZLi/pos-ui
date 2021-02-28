@@ -1,4 +1,6 @@
 import { makeStyles } from '@material-ui/styles';
+import { connect } from 'react-redux';
+import { updateOrderListInfo } from '../../../redux/actions';
 
 const useStyles = makeStyles({
     rootContainer: {
@@ -19,11 +21,17 @@ const useStyles = makeStyles({
 
 const Order = ({
     num,
+    updateOrderListInfo,
 }) => {
     const classes = useStyles();
-
+    
     return (
-        <div className={classes.rootContainer}>
+        <div
+            className={classes.rootContainer}
+            onMouseDown={() => {
+                updateOrderListInfo('open', num);
+            }}
+        >
             <div className={classes.container}
             >
                 #{num}
@@ -32,4 +40,8 @@ const Order = ({
     );
 };
 
-export default Order;
+const dispatches = {
+    updateOrderListInfo,
+};
+
+export default connect(null, dispatches)(Order);

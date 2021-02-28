@@ -51,10 +51,10 @@ const InfoSection = ({
 
 const states = ({
     language,
-    customerInfo,
+    orderList,
 }) => ({
     language,
-    customerInfo,
+    customerInfo: orderList.customerInfo,
 });
 
 export default connect(states)(InfoSection);

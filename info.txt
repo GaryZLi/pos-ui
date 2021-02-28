@@ -12,7 +12,8 @@
 
 - the menu should have a list opping up and price null IF it has options
 - should have alert on reject phones,
-
+- what if we open a order, and then edit?
+    - in this case, we should check if the orderList has a order number, if so, we should alter that shit
 
 -----
 2) if open a table, the type should be dinein

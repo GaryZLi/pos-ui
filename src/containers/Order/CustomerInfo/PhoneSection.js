@@ -157,13 +157,12 @@ const PhoneSection = ({
 const states = ({
     language,
     ws,
-    phoneOptions,
-    phoneNums,
+    orderList,
 }) => ({
     language,
     ws,
-    phoneOptions,
-    phoneNums,
+    phoneOptions: orderList.phoneOptions,
+    phoneNums: orderList.phoneNums,
 });
 
 const dispatches = {
