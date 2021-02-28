@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/styles';
+import { connect } from 'react-redux';
 import Order from './Order';
 
 const useStyles = makeStyles({
@@ -11,20 +12,35 @@ const useStyles = makeStyles({
     },
 });
 
-const List = () => {
+const List = ({
+    orders,
+}) => {
     const classes = useStyles();
 
-    const a = [];
+    // const a = [];
 
-    for (let i = 0; i < 10; i++) {
-        a.push(<Order num={i} price={i }/>);
-    }
+    // for (let i = 0; i < 10; i++) {
+    //     a.push(<Order num={i} price={i }/>);
+    // }
+
+    orders = orders.filter(order => !order.paid && !order.deleted);
 
     return (
         <div className={classes.rootContainer}>
-            {/* {a} */}
+            {orders.map((order, id) => (
+                <Order
+                    key={id}
+                    num={order.orderNum}
+                />
+            ))}
         </div>
     );
 };
 
-export default List;
+const states = ({
+    orders,
+}) => ({
+    orders,
+});
+
+export default connect(states)(List);

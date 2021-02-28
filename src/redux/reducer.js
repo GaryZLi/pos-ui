@@ -26,17 +26,6 @@ const initialState = {
         all: false,
     },
     settings: null,
-    // dinein: {}, // TODO: delete?
-    // togo: {}, // TODO: delete?
-    // delivery: {}, // TODO: delete?
-    phoneNums: [''],
-    phoneOptions: [], // TODO: move these shit inside orderList
-    addresses: [{
-        street: '',
-        city: '',
-        distance: ''
-    }], // TODO: move these shit inside orderList
-    addressOptions: [],
     orders: [], // maybe dont need becuz we can keep track of everything in the dinein, togo, delivery objects
     menu: [],
     modifications: [],
@@ -48,6 +37,14 @@ const initialState = {
     */
     orderNum: 1, // when should be increment this fucker?
     orderList: {
+        phoneNums: [''],
+        phoneOptions: [],
+        addresses: [{
+            street: '',
+            city: '',
+            distance: ''
+        }],
+        addressOptions: [],
         biang: false,
         deleted: false, // used for shit if already billed, deleted the order from the objects
         paid: false, // all paid
@@ -541,6 +538,15 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                             ...state.orderList,
                             date: new Date(),
                         }
+                    };
+
+                case 'orderList':
+                    const tempOrderList = action.orderList? action.orderList : initialState.orderList;
+                    return {
+                        ...state,
+                        orderList: {
+                            ...tempOrderList
+                        },
                     };
 
                 default:

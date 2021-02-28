@@ -1,8 +1,9 @@
 import { makeStyles } from '@material-ui/styles';
 import { connect } from 'react-redux';
 import { TextField } from '@material-ui/core';
-import { updateItems } from '../../../redux/actions';
 import { useState } from 'react';
+import { updateItems } from '../../../redux/actions';
+import deleteIcon from '../../../picSrc/backSpace.svg';
 
 const useStyles = makeStyles({
     rootContainer: {
@@ -52,6 +53,7 @@ const useStyles = makeStyles({
         display: 'flex',
         flexWrap: 'wrap',
         width: 174,
+        height: 174,
     },
 });
 
@@ -196,25 +198,6 @@ const Value = ({
                                 }}
                             />
                         </div>
-                        {/* DELETE */}
-                        <div
-                            className={classes.pad}
-                            style={{
-                                borderColor: operation === 'delete'? 'blue' : 'gray',
-                                marginTop: 6
-                            }}
-                            onMouseDown={() => setOperation('delete')}
-                        >
-                            <div 
-                                style={{
-                                    height: 2,
-                                    width: 20,
-                                    backgroundColor: 'black',
-                                }}
-                            >
-                                d
-                            </div>
-                        </div>
                     </div>
                     <div className={classes.numPadContainer}>
                         {Array(9).fill(0).map((a, num) => (
@@ -226,43 +209,19 @@ const Value = ({
                                 {num + 1}
                             </div>
                         ))}
-                    </div>
-                </div>
-                <div
-                    className={classes.pad}
-                    style={{
-                        width: 165,
-                        marginLeft: 'auto',
-                        marginRight: 37,
-                    }}
-                    onMouseDown={() => updateItems(focus, selectedItem, getOperationVal(0.5))}
-                >
-                    0.5
-                </div>
-                
-                
-                {/* <div 
-                    style={{
-                        display: 'flex',
-                        marginTop: 10,
-                    }}
-                >
-                    {nums.map(num => (
                         <div
                             className={classes.pad}
-                            key={num}
                             style={{
-                                height: 50,
-                                width: 50,
-                                border: '1px solid gray',
-                                marginLeft: 3,
+                                width: 165,
+                                // marginLeft: 'auto',
+                                // marginRight: 3   7,
                             }}
-                            onMouseDown={() => updateItems(focus, selectedItem, getOperationVal(num))}
+                            onMouseDown={() => updateItems(focus, selectedItem, getOperationVal(0.5))}
                         >
-                            {num}
+                            0.5
                         </div>
-                    ))}
-                </div> */}
+                    </div>
+                </div>
             </div>
         </div>
     );
