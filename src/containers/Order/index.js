@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/styles';
 import ControlPanel from './ControlPanel';
 import Panel from './Panel';
 import CustomerInfo from './CustomerInfo';
-import OrderList from './OrderList';
+import OrderInfo from './OrderInfo';
 import OrderView from './OrderView';
 import {
     updateOrderListInfo,
@@ -41,7 +41,7 @@ const Order = ({
             <Panel/>
             <div className={classes.orderContainer}>
                 <CustomerInfo/>
-                <OrderList/>
+                <OrderInfo/>
                 <ControlPanel/>
                 <OrderView/>
             </div>

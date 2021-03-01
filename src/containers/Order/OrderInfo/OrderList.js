@@ -1,27 +1,16 @@
-import { makeStyles } from '@material-ui/styles';
-import { connect } from 'react-redux';
-import { 
-    updateItems,
-    updateFocusedItems,
- } from '../../../redux/actions';
-
+import { makeStyles } from "@material-ui/styles";
 import kitchenIcon from '../../../picSrc/kitchen.svg';
 import moneyIcon from '../../../picSrc/money.png';
 import checkIcon from '../../../picSrc/check.svg';
 import clockIcon from '../../../picSrc/clock.svg';
 import deliveryIcon from '../../../picSrc/delivery.svg';
+import { connect } from "react-redux";
+import { 
+    updateFocusedItems,
+} from '../../../redux/actions';
+import { useEffect } from "react";
 
 const useStyles = makeStyles({
-    rootContainer: {
-        width: 300,
-        height: '100%',
-        borderLeft: '1px solid gray',
-        borderRight: '1px solid gray',
-        overflow: 'auto',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-    },
     itemListContainer: {
         overflow: 'auto',
     },
@@ -29,16 +18,6 @@ const useStyles = makeStyles({
         paddingTop: 10,
         borderBottom: '1px solid black',
         padding: 5,
-    },
-    calculationSection: {
-        borderTop: '5px inset gray',
-        width: '100%',
-        boxShadow: '8px 8px  #ffffff',
-    },
-    calculationItem: {
-        height: 30,
-        padding: 3,
-        borderBottom: '1px solid gray',
     },
     itemInfo: {
         paddingTop: 10,
@@ -56,14 +35,12 @@ const useStyles = makeStyles({
 const OrderList = ({
     orderList,
     language,
-    focusedItems,
     modNames,
     modifications,
+    focusedItems,
     updateFocusedItems,
-    updateItems,
-}) => {
+}) => { 
     const classes = useStyles();
-    let subTotal = 0;
     const orders = Object
         .keys(orderList.items)
         .filter(order => !orderList.items[order].deleted);
@@ -72,23 +49,9 @@ const OrderList = ({
         '中文': {},
     };
 
-    for (const item of orders) {
-        subTotal += orderList.items[item].price * orderList.items[item].quantity;
-    }
-
-    for (const mod of modifications) {
-        optionNames[mod.itemName] = {
-            English: mod.itemName,
-            '中文': mod.itemNameChinese,
-        };
-    }
-
-    const tax = subTotal * 0.0975;
-
-
     const formatDate = date => {
         let m;
-        let hour; 
+        let hour;
         let min = date.getMinutes();
 
         if (date.getHours() >= 12) {
@@ -116,9 +79,15 @@ const OrderList = ({
         return hour + ':' + min + m;
     };
 
+    for (const mod of modifications) {
+        optionNames[mod.itemName] = {
+            English: mod.itemName,
+            '中文': mod.itemNameChinese,
+        };
+    }
+
     return (
-        <div className={classes.rootContainer}>
-            <div className={classes.itemListContainer}>
+        <div className={classes.itemListContainer}>
                 {orders.map(order => (
                     <div
                         className={classes.itemContainer}
@@ -146,7 +115,6 @@ const OrderList = ({
                                 </div>
                             ))}
                         </div>
-                        
                         {/* ICONS */}
                         <div className={classes.iconContainer}>
                             {orderList.items[order].kitchened && (
@@ -206,21 +174,6 @@ const OrderList = ({
                     </div>
                 ))}
             </div>
-            <div
-                className={classes.calculationSection}
-                onClick={() => updateItems('biangAll')}
-            >
-                <div className={classes.calculationItem}>
-                    Subtotal: ${subTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
-                </div>
-                <div className={classes.calculationItem}>
-                    Tax: ${tax.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
-                </div>
-                <div className={classes.calculationItem}>
-                    Total: ${(subTotal + tax).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
-                </div>
-            </div>
-        </div>
     );
 };
 
@@ -240,7 +193,6 @@ const states = ({
 
 const dispatches = {
     updateFocusedItems,
-    updateItems,
 };
 
 export default connect(states, dispatches)(OrderList);

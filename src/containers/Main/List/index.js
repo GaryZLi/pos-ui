@@ -23,7 +23,7 @@ const List = ({
     //     a.push(<Order num={i} price={i }/>);
     // }
 
-    orders = orders.filter(order => !order.paid && !order.deleted);
+    orders = orders.filter(order => !order.paid && !order.deleted && (order.type === 'togo' || order.type == 'delivery'));
 
     return (
         <div className={classes.rootContainer}>

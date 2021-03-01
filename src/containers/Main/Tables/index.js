@@ -20,6 +20,13 @@ const Tables = ({
 }) => {
     const classes = useStyles();
 
+    // TODO: prob redesign the entire thing
+    // when open a table, check if the table has a orderNum, 
+        // if not, then clear the orderList to create a new one
+        // for type -> row-col format
+        // add an orderNum for this table
+        // increment the orderNum
+
     return (
         <div className={classes.rootContainer}>
             {tables.map((rows, col) => {

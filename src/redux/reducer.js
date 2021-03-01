@@ -17,6 +17,7 @@ import * as types from './action-types';
 
 const initialState = {
     screenType: 'order',
+    taxRate: 0.0975,
     language: 'English',
     focusedSection: {
         English: 'Appetizers',
@@ -325,16 +326,16 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                     };
 
                 case 'add':
-                    // TODO: v this and not deleted
-                    // itemShape
-                    // if (state.orderList.items[action.val.itemName].deleted) {
+                    // already has the item in the order and not deleted
+                    // state.orderList.items[action.val.itemName].price
+                    const price = parseFloat(action.val.price);
 
-                    // }
                     if (state.orderList.items[action.val.itemName] && !state.orderList.items[action.val.itemName].deleted) {
                         return {
                             ...state,
                             orderList: {
                                 ...state.orderList,
+                                total: state.orderList.total + (price + (price * state.taxRate)),
                                 items: {
                                     ...state.orderList.items,
                                     [action.val.itemName]: {
@@ -354,12 +355,13 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                         },
                         orderList: {
                             ...state.orderList,
+                            total: state.orderList.total + (price + (price * state.taxRate)),
                             items: {
                                 ...state.orderList.items,
                                 [action.val.itemName]: {
                                     ...state.orderList.items[action.val.itemName],
                                     quantity: 1,
-                                    price: parseFloat(action.val.price),
+                                    price,
                                     name: {
                                         English: action.val.itemName,
                                         '中文': action.val.itemNameChinese,
@@ -377,34 +379,35 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                     };
 
                 case 'biang':
-                    return {
-                        ...state,
-                        orderList: {
-                            ...state.orderList,
-                            items: {
-                                ...state.orderList.items,
-                                [state.focusedItems]: {
-                                    ...state.orderList.items[state.focusedItems],
-                                    biang: true,
-                                }
-                            }
-                        }
-                    };
-
-                    // TODO: need to work on biang and biangall
-                case 'biangAll':
-                    if (state.orderList.biang) {
-                        for (const item in state.orderList.items) {
-                            state.orderList.items[item].biang = false;
-                        }
-                    }
-                    else {
+                    const biangAll = () => {
                         for (const item in state.orderList.items) {
                             state.orderList.items[item].biang = true;
                         }
+                    };
+
+                    const selectedItems = [];
+
+                    for (const item in state.focusedItems) {
+                        if (item === 'all' || !state.focusedItems[item]) continue;
+
+                        selectedItems.push(item);
                     }
 
-                    state.orderList.biang = !state.orderList.biang;
+                    if (state.focusedItems.all || !selectedItems.length) {
+                        biangAll();
+
+                        return {
+                            ...state,
+                            orderList: {
+                                ...state.orderList,
+                                biang: !state.orderList.biang,
+                            }
+                        };
+                    }
+
+                    for (const item of selectedItems) {
+                        state.orderList.items[item].biang = !state.orderList.items[item].biang;
+                    }
 
                     return {
                         ...state,
@@ -412,6 +415,20 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                             ...state.orderList,
                         }
                     };
+
+                    // return {
+                    //     ...state,
+                    //     orderList: {
+                    //         ...state.orderList,
+                    //         items: {
+                    //             ...state.orderList.items,
+                    //             [state.focusedItems]: {
+                    //                 ...state.orderList.items[state.focusedItems],
+                    //                 biang: true,
+                    //             }
+                    //         }
+                    //     }
+                    // };
 
                 case 'future':
                     for (const item in state.focusedItems) {
@@ -453,6 +470,7 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
 
                         state.focusedItems[item] = false;
                         state.orderList.items[item].deleted = true;
+                        state.orderList.total -= (state.orderList.items[item].quantity * state.orderList.items[item].price) / (1 + state.taxRate);
                     }
 
                     return {
@@ -585,8 +603,8 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                         orders: [
                             ...state.orders,
                         ]
-                    };             
-
+                    };       
+                    
                 default:
                     return state;
             }
