@@ -107,7 +107,13 @@ const Panel = ({
                 English: 'Delivery All',
             },
             action: () => {
-                updateItems('deliveryAll');
+                if (orderNum) {
+                    updateOrderListInfo('update', orderNum);
+                }
+                else {
+                    updateItems('deliveryAll');
+                }
+                
                 updateOrderListInfo('new');
             },
         },

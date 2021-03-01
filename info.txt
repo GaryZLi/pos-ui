@@ -18,3 +18,10 @@
 3) delivery all will change the type to delivery
 4) on kitchen All, delivery all
 5) payall should have a modal popup, 
+
+
+bug:
+1) enter items
+    - delivery all
+    - press open #1 to go back to the order
+    - pressing All doesnt select everything
