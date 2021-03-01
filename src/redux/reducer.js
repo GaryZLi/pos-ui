@@ -30,7 +30,6 @@ const initialState = {
     orders: [], // maybe dont need becuz we can keep track of everything in the dinein, togo, delivery objects
     menu: [],
     modifications: [],
-    totalNum: 0, // TODO: delete?
     /*
         currentNum = totalNum - orderNum;
 
@@ -256,8 +255,6 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
             };
 
         case types.UPDATE_ITEMS:
-            // TODO deal with all selected
-
             switch (action.key) {
                 case 'options':
                     for (const item in state.focusedItems) {
@@ -381,7 +378,7 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                 case 'biang':
                     const biangAll = () => {
                         for (const item in state.orderList.items) {
-                            state.orderList.items[item].biang = true;
+                            state.orderList.items[item].biang = !state.orderList.biang;
                         }
                     };
 
@@ -470,7 +467,8 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
 
                         state.focusedItems[item] = false;
                         state.orderList.items[item].deleted = true;
-                        state.orderList.total -= (state.orderList.items[item].quantity * state.orderList.items[item].price) / (1 + state.taxRate);
+                        const subTotal = state.orderList.items[item].quantity * state.orderList.items[item].price;
+                        state.orderList.total = state.orderList.total - (subTotal + (subTotal * state.taxRate));
                     }
 
                     return {

@@ -18,6 +18,7 @@ const useStyles = makeStyles({
 const PriceSection = ({
     biang,
     total,
+    updateItems,
 }) => {
     const classes = useStyles();
     total = Math.ceil(total * 100) / 100;
