@@ -6,6 +6,7 @@ import {
 import { useState } from 'react';
 import exitIcon from '../../picSrc/exitList.svg';
 import { updateScreenType } from '../../redux/actions';
+import Row from './Row';
 
 const useStyles = makeStyles({
     rootContainer: {
@@ -40,6 +41,14 @@ const useStyles = makeStyles({
     exitIcon: {
         height: 60,
         width: 60,
+
+        '&:active': {
+            height: 70,
+            width: 70,
+        }
+    },
+    table: {
+        width: '80%'
     }
 });
 
@@ -131,19 +140,18 @@ const List = ({
                 ))}
             </Paper>
             <Paper
-                className={classes.container}
+                className={classes.table}
                 style={{
                     marginTop: 50,
                     marginBottom: 50,
                 }}
                 elevation={11}
             >
-                {orders.map(order => (
-                    <div
-                        key={'k'}
-                    >
-                        {order.price}
-                    </div>
+                {orders.map((order, id) => (
+                    <Row
+                        key={id}
+                        order={order}
+                    />
                 ))}
             </Paper>
         </div>
