@@ -16,7 +16,7 @@ import * as types from './action-types';
 */
 
 const initialState = {
-    screenType: 'order',
+    screenType: 'list',
     taxRate: 0.0975,
     language: 'English',
     focusedSection: {
@@ -114,6 +114,9 @@ const initialState = {
 // };
 
 const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
+    let updatedOrders;
+    let updatedOrderNum;
+
     switch (action.type) {
         case types.DISPATCH_TO_STORE:
             return {
@@ -303,23 +306,40 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                 case 'kitchenAll':
                     for (const item in state.orderList.items) {
                         state.orderList.items[item].kitchened = true;
-                        state.orderList.items[item].togo = state.orderList.type === 'togo';
+
+                        if (state.orderList.type === 'togo') {
+                            state.orderList.items[item].togo = true;
+                            state.orderList.items[item].delivery = false;
+                        }
+                        else {
+                            state.orderList.items[item].togo = false;
+                            state.orderList.items[item].delivery = true;
+                        }
                     }
 
-                    state.orderList.orderNum = state.orderNum;
-                    state.orderList.customer = {
-                        addresses: [...state.orderList.addresses],
-                        phoneOptions: [...state.orderList.phoneOptions],
-                    };
+                    if (state.orderList.orderNum) {
+                        state.orders[state.orderList.orderNum - 1] = state.orderList;
+                        updatedOrders = state.orders;
+                        updatedOrderNum = state.orderNum;
+                    }
+                    else {
+                        state.orderList.orderNum = state.orderNum;
+                        state.orderList.customer = {
+                            addresses: [...state.orderList.addresses],
+                            phoneOptions: [...state.orderList.phoneOptions],
+                        };
+                        updatedOrders = [
+                            ...state.orders,
+                            state.orderList,
+                        ];
+                        updatedOrderNum = state.orderNum + 1;
+                    }
 
                     return {
                         ...state,
-                        orders: [
-                            ...state.orders,
-                            state.orderList,
-                        ],
+                        orders: updatedOrders,
                         screenType: 'main',
-                        orderNum: state.orderNum + 1,
+                        orderNum: updatedOrderNum,
                     };
 
                 case 'add':
@@ -413,20 +433,6 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                         }
                     };
 
-                    // return {
-                    //     ...state,
-                    //     orderList: {
-                    //         ...state.orderList,
-                    //         items: {
-                    //             ...state.orderList.items,
-                    //             [state.focusedItems]: {
-                    //                 ...state.orderList.items[state.focusedItems],
-                    //                 biang: true,
-                    //             }
-                    //         }
-                    //     }
-                    // };
-
                 case 'future':
                     for (const item in state.focusedItems) {
                         if (!state.focusedItems[item] || item === 'all') continue;
@@ -481,22 +487,14 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                         }
                     };
 
-                // case 'deleteAll':
-                //     for (const item in state.orders)
-
-                //     return {
-                //         ...state,
-                //         orderList: {
-                //             ...state.orderList,
-                //             deleted: true,
-                //         },
-                //     };
-
                 case 'delivery':
                     for (const item in state.focusedItems) {
                         if (item === 'all' || !state.focusedItems[item]) continue;
 
-                        state.orderList.items[item].delivery = true;
+                        state.orderList.items[item].delivery = !state.orderList.items[item].delivery;
+
+                        if (state.orderList.items[item].delivery)
+                            state.orderList.items[item].togo = false;
                     }
 
                     return {
@@ -511,14 +509,28 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
 
                     for (const item in state.orderList.items) {
                         state.orderList.items[item].delivery = true;
+                        state.orderList.items[item].togo = false;
                     }
 
                     state.orderList.type = 'delivery';
-                    state.orderList.orderNum = state.orderNum;
-                    state.orderList.customer = {
-                        addresses: [...state.orderList.addresses],
-                        phoneOptions: [...state.orderList.phoneOptions],
-                    };
+                    
+                    if (state.orderList.orderNum) {
+                        state.orders[state.orderList.orderNum - 1] = state.orderList;
+                        updatedOrders = state.orders;
+                        updatedOrderNum = state.orderNum;
+                    }
+                    else {
+                        state.orderList.orderNum = state.orderNum;
+                        state.orderList.customer = {
+                            addresses: [...state.orderList.addresses],
+                            phoneOptions: [...state.orderList.phoneOptions],
+                        };
+                        updatedOrders = [
+                            ...state.orders,
+                            state.orderList,
+                        ];
+                        updatedOrderNum = state.orderNum + 1;
+                    }
 
                     return {
                         ...state,
@@ -528,15 +540,11 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                         focusedItems: {
                             ...initialState.focusedItems,
                         },
-                        orders: [
-                            ...state.orders,
-                            state.orderList,
-                        ],
+                        orders: updatedOrders,
                         screenType: 'main',
-                        orderNum: state.orderNum + 1,
+                        orderNum: updatedOrderNum,
                     };
     
-
                 default:
                     return {
                         ...state,
@@ -555,8 +563,11 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                     };
 
                 case 'delete':
-                    if (action.val) {
-                        state.orders[action.val - 1].deleted = true;
+                    if (window.confirm('Deleted this order?')) {
+                        if (action.val) {
+                            state.orders[action.val - 1].deleted = true;
+                        }
+                        
                         return {
                             ...state,
                             screenType: 'main',
@@ -567,11 +578,11 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                             focusedItems: {
                                 ...initialState.focusedItems,
                             },
-                            orderList: {
-                                ...initialState.orderList,
-                            },
+                            orderList: JSON.parse(JSON.stringify(initialState.orderList)),
                         }
                     }
+
+                    return state;
 
                 case 'new':
                     return {
@@ -588,19 +599,32 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                     };
 
                 case 'open':
+                    const updatedFocusedItems = {};
+
+                    for (const item in state.orders[action.val - 1].items) {
+                        updatedFocusedItems[item] = false;
+                    }
+
+                    updatedFocusedItems.all = false;
+
                     return {
                         ...state,
                         screenType: 'order',
-                        orderList: state.orders[action.val - 1]
+                        orderList: {
+                            ...state.orders[action.val - 1],
+                        },
+                        focusedItems: updatedFocusedItems,
                     }
                     
                 case 'update':
                     state.orders[action.val - 1] = state.orderList;
+
                     return {
                         ...state,
                         orders: [
                             ...state.orders,
-                        ]
+                        ],
+                        // screenType: 'main',
                     };       
                     
                 default:

@@ -1,6 +1,8 @@
+import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import Main from '../Main';
 import Order from '../Order';
+import List from '../List';
 
 const styles = {
     rootContainer: {
@@ -14,12 +16,19 @@ const styles = {
 
 const screen = {
     'main': <Main />,
-    'order': <Order />
+    'order': <Order />,
+    'list': <List/>,
 };
 
 const View = ({
     screenType,
 }) => {
+
+    useEffect(() => {
+        document.addEventListener('contextmenu', e => e.preventDefault());
+
+        return () => document.removeEventListener('contextmenu', e => e.preventDefault());
+    }, []);
 
     return (
         <div style={styles.rootContainer}>

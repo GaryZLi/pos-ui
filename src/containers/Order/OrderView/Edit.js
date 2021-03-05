@@ -112,6 +112,7 @@ const Value = ({
                 <TextField
                     className={classes.item}
                     type={'number'}
+                    inputProps={{min: 0}}
                     label={labels.quantity[language]}
                     placeholder={labels.quantity[language]}
                     variant='outlined'
@@ -125,6 +126,7 @@ const Value = ({
                     label={labels.price[language]}
                     placeholder={labels.price[language]}
                     type={'number'}
+                    inputProps={{min: 0}}
                     variant='outlined'
                     onChange={e => updateItems('price', selectedItem, e.target.value)}
                     onMouseDown={() => setFocus('price')}

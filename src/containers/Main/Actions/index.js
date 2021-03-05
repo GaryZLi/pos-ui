@@ -41,7 +41,7 @@ const Settings = ({
                 '中文': 'List 中文',
                 English: 'List',
             },
-            action: () => console.log('List'),
+            action: () => updateScreenType('list'),
         },
         {
             name: {

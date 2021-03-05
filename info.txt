@@ -12,6 +12,9 @@
 - what if we open a order, and then edit?
     - in this case, we should check if the orderList has a order number, if so, we should alter that shit
 - if pay with card, probably have to unselect biang
+- add a restore button, for deleted items
+- add a kitchened - to determine the color of the order
+- figure out how to add the card reader send to server
 
 -----
 2) if open a table, type -> format row-col

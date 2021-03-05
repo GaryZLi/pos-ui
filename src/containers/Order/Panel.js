@@ -15,6 +15,7 @@ import settingIcon from '../../picSrc/setting.svg';
 import languageIcon from '../../picSrc/language.svg';
 import exitIcon from '../../picSrc/exit.svg';
 import {
+    updateFocusedSection,
     updateItems,
     updateLanguage,
     updateOrderListInfo,
@@ -38,6 +39,7 @@ const Panel = ({
     updateScreenType,
     updateItems,
     updateOrderListInfo,
+    updateFocusedSection,
 }) => {
 
     const panelList = [
@@ -82,7 +84,10 @@ const Panel = ({
                 '中文': 'Pay 中文',
                 English: 'Pay',
             },
-            action: () => updateLanguage(language),
+            action: () => updateFocusedSection({
+                English: 'Pay',
+                '中文': 'Pay 中文',
+            }),
         },
         {
             iconSrc: payAllIcon,
@@ -90,7 +95,10 @@ const Panel = ({
                 '中文': 'Pay All 中文',
                 English: 'Pay All',
             },
-            action: () => updateLanguage(language),
+            action: () => updateFocusedSection({
+                English: 'Pay All',
+                '中文': 'Pay All 中文',
+            }),
         },
         {
             iconSrc: deliveryIcon,
@@ -107,13 +115,7 @@ const Panel = ({
                 English: 'Delivery All',
             },
             action: () => {
-                if (orderNum) {
-                    updateOrderListInfo('update', orderNum);
-                }
-                else {
-                    updateItems('deliveryAll');
-                }
-                
+                updateItems('deliveryAll');
                 updateOrderListInfo('new');
             },
         },
@@ -194,6 +196,7 @@ const dispatches = {
     updateScreenType,
     updateItems,
     updateOrderListInfo,
+    updateFocusedSection
 };
 
 export default connect(states, dispatches)(Panel);

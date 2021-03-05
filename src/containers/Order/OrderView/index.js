@@ -4,6 +4,7 @@ import Menu from './Menu';
 import Modification from './Modification';
 import Edit from './Edit';
 import Future from './Future';
+import Pay from './Pay';
 
 const useStyles = makeStyles({
     rootContainer: {
@@ -33,9 +34,10 @@ const focuses = {
     'Less': "mod",
     'Change': "mod",
     'No': "mod",
-    // 'Modify Price': 'mp',
     'Edit': 'edit',
     'Future': 'future',
+    'Pay': 'pay',
+    'Pay All': 'pay',
 };
 
 const OrderView = ({
@@ -58,8 +60,11 @@ const OrderView = ({
             break;
 
         case 'edit':
-        // case 'mq':
             currentView = <Edit/>;
+            break;
+
+        case 'pay':
+            currentView = <Pay/>;
             break;
 
         default:

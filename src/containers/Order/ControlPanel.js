@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/styles';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import {
     updateFocusedItems,
@@ -69,7 +69,7 @@ const ControlPanel = ({
     const classes = useStyles();
     const [sections, setSections] = useState([]);
     const numOfFocusedItems = Object.keys(focusedItems).filter(item => focusedItems[item] && item !== 'all');
-  
+    
     // TODO: maybe create a db for the sections, with name in english and chinese
     useEffect(() => {
         const set = {};
@@ -96,6 +96,8 @@ const ControlPanel = ({
     }, [menu]);
 
     // DELETE: https://www.tiktok.com/@rachael.minjarez1/video/6931076678378671365?sender_device=pc&sender_web_id=6933057260022695430&is_from_webapp=v1&is_copy_url=0
+
+    if (focusedSection.English === 'Pay' || focusedSection.English === 'Pay All') return <div/>;
 
     return (
         <div className={classes.rootContainer}>

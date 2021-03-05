@@ -1,14 +1,14 @@
 import { makeStyles } from "@material-ui/styles";
 import kitchenIcon from '../../../picSrc/kitchen.svg';
-import moneyIcon from '../../../picSrc/money.png';
 import checkIcon from '../../../picSrc/check.svg';
 import clockIcon from '../../../picSrc/clock.svg';
+import paidIcon from '../../../picSrc/paid.svg';
+import togoIcon from '../../../picSrc/togo.svg';
 import deliveryIcon from '../../../picSrc/delivery.svg';
 import { connect } from "react-redux";
 import { 
     updateFocusedItems,
 } from '../../../redux/actions';
-import { useEffect } from "react";
 
 const useStyles = makeStyles({
     itemListContainer: {
@@ -127,14 +127,14 @@ const OrderList = ({
                             {orderList.items[order].paid && (
                                 <img
                                     className={classes.icon}
-                                    src={moneyIcon}
+                                    src={paidIcon}
                                     alt='icon'
                                 />
                             )}
                             {orderList.items[order].togo && (
                                 <img
                                     className={classes.icon}
-                                    src={checkIcon}
+                                    src={togoIcon}
                                     alt='icon'
                                 />
                             )}
