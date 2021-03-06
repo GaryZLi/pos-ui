@@ -119,10 +119,11 @@ export const updateItems = (key, val, a) => ({
     a,
 });
 
-export const updateOrderListInfo = (key, val) => ({
+export const updateOrderListInfo = (key, val, a) => ({
     type: types.UPDATE_ORDERLIST_INFO,
     key,
     val,
+    a
 });
 
 // DELETE?

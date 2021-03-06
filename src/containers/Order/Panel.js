@@ -89,17 +89,18 @@ const Panel = ({
                 '中文': 'Pay 中文',
             }),
         },
-        {
-            iconSrc: payAllIcon,
-            name: {
-                '中文': 'Pay All 中文',
-                English: 'Pay All',
-            },
-            action: () => updateFocusedSection({
-                English: 'Pay All',
-                '中文': 'Pay All 中文',
-            }),
-        },
+        // DELETE?
+        // {
+        //     iconSrc: payAllIcon,
+        //     name: {
+        //         '中文': 'Pay All 中文',
+        //         English: 'Pay All',
+        //     },
+        //     action: () => updateFocusedSection({
+        //         English: 'Pay All',
+        //         '中文': 'Pay All 中文',
+        //     }),
+        // },
         {
             iconSrc: deliveryIcon,
             name: {
@@ -162,6 +163,7 @@ const Panel = ({
 
                 if (orderNum) {
                     updateOrderListInfo('update', orderNum);
+                    updateOrderListInfo('new'); // TODO: make sure this works
                 }
             },
         },

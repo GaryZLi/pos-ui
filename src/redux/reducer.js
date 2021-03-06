@@ -16,7 +16,7 @@ import * as types from './action-types';
 */
 
 const initialState = {
-    screenType: 'list',
+    screenType: 'order',
     taxRate: 0.0975,
     language: 'English',
     focusedSection: {
@@ -55,7 +55,7 @@ const initialState = {
         items: {},
         cash: 0,
         card: 0,
-        total: 0,
+        // total: 0,
         /*
         [name]: {
             price: num,
@@ -352,7 +352,7 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                             ...state,
                             orderList: {
                                 ...state.orderList,
-                                total: state.orderList.total + (price + (price * state.taxRate)),
+                                // total: state.orderList.total + (price + (price * state.taxRate)),
                                 items: {
                                     ...state.orderList.items,
                                     [action.val.itemName]: {
@@ -372,7 +372,7 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                         },
                         orderList: {
                             ...state.orderList,
-                            total: state.orderList.total + (price + (price * state.taxRate)),
+                            // total: state.orderList.total + (price + (price * state.taxRate)),
                             items: {
                                 ...state.orderList.items,
                                 [action.val.itemName]: {
@@ -468,14 +468,14 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                     };
 
                 case 'delete':
-                    for (const item in state.focusedItems) {
-                        if (item === 'all' || !state.focusedItems[item]) continue;
+                    // for (const item in state.focusedItems) {
+                    //     if (item === 'all' || !state.focusedItems[item]) continue;
 
-                        state.focusedItems[item] = false;
-                        state.orderList.items[item].deleted = true;
-                        const subTotal = state.orderList.items[item].quantity * state.orderList.items[item].price;
-                        state.orderList.total = state.orderList.total - (subTotal + (subTotal * state.taxRate));
-                    }
+                    //     state.focusedItems[item] = false;
+                    //     state.orderList.items[item].deleted = true;
+                    //     const subTotal = state.orderList.items[item].quantity * state.orderList.items[item].price;
+                    //     state.orderList.total = state.orderList.total - (subTotal + (subTotal * state.taxRate));
+                    // }
 
                     return {
                         ...state,
@@ -559,6 +559,41 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                         orderList: {
                             ...state.orderList,
                             date: new Date(),
+                        }
+                    };
+
+                case 'pay':
+                    let totalCost = 0;
+                    
+                    for (const item in state.orderList.items) {
+                        if (!state.orderList.items[item].paid)
+                            totalCost += state.orderList.items[item].price * state.orderList.items[item].quantity;
+                    }
+                    
+                    totalCost = totalCost + (totalCost * state.taxRate);
+                    
+                    // paid in full
+                    if (action.val + action.a >= totalCost) {
+                        for (const item in state.orderList.items) {
+                            state.orderList.items[item].paid = true;
+                        }
+
+                        state.orderList.paid = true;
+                    }
+                    // only paid selected
+                    else {
+                        for (const item in state.focusedItems) {
+                            state.orderList.items[item].paid = true;
+                        }
+                    }
+
+                    state.orderList.cash += action.val;
+                    state.orderList.card += action.a;
+
+                    return {
+                        ...state,
+                        orderList: {
+                            ...state.orderList,
                         }
                     };
 

@@ -17,13 +17,14 @@ const useStyles = makeStyles({
 
 const PriceSection = ({
     biang,
-    total,
+    subTotal,
+    tax,
     updateItems,
 }) => {
     const classes = useStyles();
-    total = Math.ceil(total * 100) / 100;
-    const subTotal = total / 1.0975;
-    const tax = total - subTotal;
+    // subTotal = Math.ceil(subTotal * 100) / 100;
+    // const subsubTotal = subTotal / 1.0975;
+    // const tax = subTotal - subsubTotal;
 
     return (
         <div
@@ -34,13 +35,13 @@ const PriceSection = ({
             onClick={() => updateItems('biang')}
         >
             <div className={classes.calculationItem}>
-                Subtotal: ${subTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                Subtotal: ${(Math.ceil(subTotal * 100) / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </div>
             <div className={classes.calculationItem}>
-                Tax: ${tax.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                Tax: ${(Math.ceil(tax * 100) / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </div>
             <div className={classes.calculationItem}>
-                Total: ${total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                Total: ${(Math.ceil((tax + subTotal) * 100) / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </div>
         </div>
     );
@@ -48,10 +49,26 @@ const PriceSection = ({
 
 const states = ({
     orderList,
-}) => ({
-    biang: orderList.biang,
-    total: orderList.total,
-});
+    taxRate,
+    language,
+}) => {
+    let subTotal = 0;
+
+    for (const item in orderList.items) {
+        subTotal += orderList.items[item].price * orderList.items[item].quantity;
+    }
+
+    return {
+        subTotal,
+        tax: subTotal * taxRate,
+        language,
+        biang: orderList.biang,
+    };
+
+    // return {
+    //     subTotal: orderList.subTotal,
+    // }
+};
 
 const dispatches = {
     updateItems,

@@ -16,6 +16,8 @@
 - add a kitchened - to determine the color of the order
 - figure out how to add the card reader send to server
 
+- kitchen all should not work when order is empty
+
 -----
 2) if open a table, type -> format row-col
 3) delivery all will change the type to delivery
@@ -28,3 +30,9 @@ bug:
     - delivery all
     - press open #1 to go back to the order
     - pressing All doesnt select everything
+2) fix bug where if i have multiple items in the list
+    - have multiple items in the list  
+    - select only 1
+    - pay big money, like 100+ or something
+    - all items will be paid, becuz we have enough to cover the total
+    - we need to check only the selected items

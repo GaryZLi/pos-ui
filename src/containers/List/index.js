@@ -6,7 +6,8 @@ import {
 import { useState } from 'react';
 import exitIcon from '../../picSrc/exitList.svg';
 import { updateScreenType } from '../../redux/actions';
-import Row from './Row';
+import Heading from './Heading';
+import Table from './Table';
 
 const useStyles = makeStyles({
     rootContainer: {
@@ -34,24 +35,25 @@ const useStyles = makeStyles({
         width: '100%',
         display: 'flex',
         justifyContent: 'flex-end',
-        paddingRight: 60,
-        paddingTop: 30,
         alignItems: 'center',
     },
     exitIcon: {
+        paddingRight: 30,
+        paddingTop: 30,
         height: 60,
         width: 60,
-
         '&:active': {
             height: 70,
             width: 70,
         }
     },
     table: {
-        width: '80%'
+        width: '80%',
+        backgroundColor: 'transparent'
     }
 });
 
+const columnWidths = [{width: 150}, {flex: 1}, {width: 150}, {width: 150}, {width: 150}, {width: 150},];
 
 const List = ({
     language,
@@ -103,7 +105,7 @@ const List = ({
         orders = orders.filter(order => filterConditions[condition](order))
     }
 
-    console.log(orders)
+    orders = orders.filter(order => !order.biang);
 
     return (
         <div className={classes.rootContainer}>
@@ -112,6 +114,7 @@ const List = ({
                     className={classes.exitIcon}
                     src={exitIcon}
                     alt='exit icon'
+                    draggable={false}
                     onClick={() => updateScreenType('main')}
                 />
             </div>
@@ -139,21 +142,11 @@ const List = ({
                     </div>
                 ))}
             </Paper>
-            <Paper
-                className={classes.table}
-                style={{
-                    marginTop: 50,
-                    marginBottom: 50,
-                }}
-                elevation={11}
-            >
-                {orders.map((order, id) => (
-                    <Row
-                        key={id}
-                        order={order}
-                    />
-                ))}
-            </Paper>
+            <Heading columnWidths={columnWidths}/>
+            <Table
+                columnWidths={columnWidths}
+                orders={orders}
+            />
         </div>
     );
 };
