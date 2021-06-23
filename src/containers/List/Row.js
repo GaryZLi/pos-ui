@@ -21,7 +21,7 @@ const columns = [
         else if (order.delivery) return 'Delivery 中文';
         else return 'Dine In 中文';
     },
-    order => '$' + (order.total).toLocaleString("en-US", {maximumFractionDigits: 2}),
+    order => '$' + (order.total)?.toLocaleString("en-US", {maximumFractionDigits: 2}),
     order => {
         return `${order.date.getHours() > 12? order.date.getHours() - 12 : order.date.getHours()}:${order.date.getMinutes()} ${order.date.getHours() >= 12? 'PM' : 'AM'}`
     },

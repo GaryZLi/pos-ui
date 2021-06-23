@@ -468,14 +468,12 @@ const reducer = (state = JSON.parse(JSON.stringify(initialState)), action) => {
                     };
 
                 case 'delete':
-                    // for (const item in state.focusedItems) {
-                    //     if (item === 'all' || !state.focusedItems[item]) continue;
+                    for (const item in state.focusedItems) {
+                        if (item === 'all' || !state.focusedItems[item]) continue;
 
-                    //     state.focusedItems[item] = false;
-                    //     state.orderList.items[item].deleted = true;
-                    //     const subTotal = state.orderList.items[item].quantity * state.orderList.items[item].price;
-                    //     state.orderList.total = state.orderList.total - (subTotal + (subTotal * state.taxRate));
-                    // }
+                        state.focusedItems[item] = false;
+                        state.orderList.items[item].deleted = true;
+                    }
 
                     return {
                         ...state,

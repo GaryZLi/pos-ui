@@ -15,8 +15,8 @@
 - add a restore button, for deleted items
 - add a kitchened - to determine the color of the order
 - figure out how to add the card reader send to server
-
 - kitchen all should not work when order is empty
+
 
 -----
 2) if open a table, type -> format row-col
@@ -36,3 +36,14 @@ bug:
     - pay big money, like 100+ or something
     - all items will be paid, becuz we have enough to cover the total
     - we need to check only the selected items
+3) pay
+    - paid item
+    - when i click on the same paid item, it will be considered pay, becuz of the same key
+    * adding on
+    - select 1 item
+    - pay that item
+    - add some more items
+    - exit
+    - on the left, that list is technically considered paid, need to fix that
+    * for paid
+    - we should just loop thru all the items to see if all the items are paid, rather than the outside variable key to determine
